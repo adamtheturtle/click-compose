@@ -1,0 +1,239 @@
+---
+fail_fast: true
+
+ci:
+  skip:
+    - actionlint
+    - check-manifest
+    - deptry
+    - doc8
+    - docformatter
+    - docs
+    - interrogate
+    - linkcheck
+    - mypy
+    - pylint
+    - pyproject-fmt-fix
+    - pyright
+    - pyright-verifytypes
+    - pyroma
+    - ruff-check-fix
+    - ruff-format-fix
+    - shellcheck
+    - shfmt
+    - spelling
+    - sphinx-lint
+    - vulture
+    - yamlfix
+
+default_install_hook_types: [pre-commit, pre-push, commit-msg]
+
+repos:
+  - repo: meta
+    hooks:
+      - id: check-useless-excludes
+        stages: [pre-commit]
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: check-added-large-files
+        stages: [pre-commit]
+      - id: check-case-conflict
+        stages: [pre-commit]
+      - id: check-executables-have-shebangs
+        stages: [pre-commit]
+      - id: check-merge-conflict
+        stages: [pre-commit]
+      - id: check-shebang-scripts-are-executable
+        stages: [pre-commit]
+      - id: check-symlinks
+        stages: [pre-commit]
+      - id: check-json
+        stages: [pre-commit]
+      - id: check-toml
+        stages: [pre-commit]
+      - id: check-vcs-permalinks
+        stages: [pre-commit]
+      - id: check-yaml
+        stages: [pre-commit]
+      - id: end-of-file-fixer
+        stages: [pre-commit]
+      - id: file-contents-sorter
+        files: spelling_private_dict\.txt$
+        stages: [pre-commit]
+      - id: trailing-whitespace
+        stages: [pre-commit]
+  - repo: https://github.com/pre-commit/pygrep-hooks
+    rev: v1.10.0
+    hooks:
+      - id: rst-directive-colons
+        stages: [pre-commit]
+      - id: rst-inline-touching-normal
+        stages: [pre-commit]
+      - id: text-unicode-replacement-char
+        stages: [pre-commit]
+      - id: rst-backticks
+        stages: [pre-commit]
+  - repo: local
+    hooks:
+      - id: actionlint
+        name: actionlint
+        entry: uv run --extra=dev actionlint
+        language: python
+        pass_filenames: false
+        types_or: [yaml]
+        additional_dependencies: [uv==0.6.3]
+        stages: [pre-commit]
+      - id: check-manifest
+        name: check-manifest
+        entry: uv run --extra=dev check-manifest
+        language: python
+        pass_filenames: false
+        additional_dependencies: [uv==0.6.3]
+        stages: [pre-push]
+      - id: deptry
+        name: deptry
+        entry: uv run --extra=dev deptry src
+        language: python
+        pass_filenames: false
+        additional_dependencies: [uv==0.6.3]
+        stages: [pre-push]
+      - id: doc8
+        name: doc8
+        entry: uv run --extra=dev doc8
+        language: python
+        files: \.(rst|txt)$
+        additional_dependencies: [uv==0.6.3]
+        stages: [pre-commit]
+      - id: docformatter
+        name: docformatter
+        entry: uv run --extra=dev docformatter --in-place
+        language: python
+        types_or: [python, pyi]
+        additional_dependencies: [uv==0.6.3]
+        stages: [pre-commit]
+      - id: docs
+        name: docs
+        entry: uv run --extra=dev sphinx-build -W docs/source/ docs/build/
+        language: python
+        pass_filenames: false
+        additional_dependencies: [uv==0.6.3]
+        stages: [pre-push]
+      - id: interrogate
+        name: interrogate
+        entry: uv run --extra=dev interrogate
+        language: python
+        types_or: [python]
+        additional_dependencies: [uv==0.6.3]
+        stages: [pre-push]
+      - id: linkcheck
+        name: linkcheck
+        entry: uv run --extra=dev sphinx-build -W -b linkcheck docs/source/ docs/build/
+        language: python
+        pass_filenames: false
+        additional_dependencies: [uv==0.6.3]
+        stages: [manual]
+      - id: mypy
+        name: mypy
+        entry: uv run --extra=dev mypy
+        language: python
+        types_or: [python]
+        additional_dependencies: [uv==0.6.3]
+        stages: [pre-push]
+        require_serial: true
+      - id: pylint
+        name: pylint
+        entry: uv run --extra=dev pylint
+        language: python
+        types_or: [python]
+        additional_dependencies: [uv==0.6.3]
+        stages: [pre-push]
+        require_serial: true
+      - id: pyproject-fmt-fix
+        name: pyproject-fmt
+        entry: uv run --extra=dev pyproject-fmt
+        language: python
+        files: pyproject.toml
+        additional_dependencies: [uv==0.6.3]
+        stages: [pre-commit]
+      - id: pyright
+        name: pyright
+        entry: uv run --extra=dev pyright
+        language: python
+        types_or: [python]
+        pass_filenames: false
+        additional_dependencies: [uv==0.6.3]
+        stages: [pre-push]
+        require_serial: true
+      - id: pyright-verifytypes
+        name: pyright --verifytypes
+        entry: uv run --extra=dev pyright --verifytypes click_compose --ignoreexternal
+        language: python
+        pass_filenames: false
+        additional_dependencies: [uv==0.6.3]
+        stages: [pre-push]
+      - id: pyroma
+        name: pyroma
+        entry: uv run --extra=dev pyroma --min 10 .
+        language: python
+        pass_filenames: false
+        additional_dependencies: [uv==0.6.3]
+        stages: [pre-push]
+      - id: ruff-check-fix
+        name: ruff check
+        entry: uv run --extra=dev ruff check --fix --force-exclude
+        language: python
+        types_or: [python, pyi]
+        additional_dependencies: [uv==0.6.3]
+        stages: [pre-commit]
+        require_serial: true
+      - id: ruff-format-fix
+        name: ruff format
+        entry: uv run --extra=dev ruff format --force-exclude
+        language: python
+        types_or: [python, pyi]
+        additional_dependencies: [uv==0.6.3]
+        stages: [pre-commit]
+        require_serial: true
+      - id: shellcheck
+        name: shellcheck
+        entry: uv run --extra=dev shellcheck
+        language: python
+        types: [shell]
+        additional_dependencies: [uv==0.6.3]
+        stages: [pre-commit]
+      - id: shfmt
+        name: shfmt
+        entry: uv run --extra=dev shfmt -w -s -i 4
+        language: python
+        types: [shell]
+        additional_dependencies: [uv==0.6.3]
+        stages: [pre-commit]
+      - id: spelling
+        name: spelling
+        entry: uv run --extra=dev sphinx-build -W -b spelling docs/source/ docs/build/
+        language: python
+        pass_filenames: false
+        additional_dependencies: [uv==0.6.3]
+        stages: [pre-push]
+      - id: sphinx-lint
+        name: sphinx-lint
+        entry: uv run --extra=dev sphinx-lint --enable all
+        language: python
+        types: [rst]
+        additional_dependencies: [uv==0.6.3]
+        stages: [pre-commit]
+      - id: vulture
+        name: vulture
+        entry: uv run --extra=dev vulture
+        language: python
+        pass_filenames: false
+        additional_dependencies: [uv==0.6.3]
+        stages: [pre-push]
+      - id: yamlfix
+        name: yamlfix
+        entry: uv run --extra=dev yamlfix
+        language: python
+        types: [yaml]
+        additional_dependencies: [uv==0.6.3]
+        stages: [pre-commit]
