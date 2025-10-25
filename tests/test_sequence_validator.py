@@ -18,6 +18,7 @@ def test_sequence_validator_basic() -> None:
         param: click.Parameter | None,
         value: int,
     ) -> int:
+        del ctx, param
         return value * 2
 
     @click.command()
@@ -49,6 +50,7 @@ def test_sequence_validator_with_validation() -> None:
         param: click.Parameter | None,
         value: int,
     ) -> int:
+        del ctx, param
         if value <= 0:
             msg = "Must be positive"
             raise click.BadParameter(message=msg)
@@ -92,6 +94,7 @@ def test_sequence_validator_empty_sequence() -> None:
         param: click.Parameter | None,
         value: int,
     ) -> int:
+        del ctx, param
         return value * 2
 
     @click.command()
@@ -120,6 +123,7 @@ def test_sequence_validator_with_type_conversion() -> None:
         param: click.Parameter | None,
         value: int,
     ) -> str:
+        del ctx, param
         return f"Number: {value}"
 
     @click.command()
@@ -149,6 +153,7 @@ def test_sequence_validator_preserves_order() -> None:
         param: click.Parameter | None,
         value: int,
     ) -> int:
+        del ctx, param
         return value
 
     @click.command()

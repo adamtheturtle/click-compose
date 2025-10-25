@@ -2,6 +2,8 @@
 Integration tests combining multiple click-compose features.
 """
 
+from pathlib import Path
+
 import click
 from click.testing import CliRunner
 
@@ -12,12 +14,14 @@ def test_multi_callback_with_sequence_validator() -> None:
     """
     multi_callback and sequence_validator can be combined.
     """
+    max_value = 100
 
     def validate_positive(
         ctx: click.Context | None,
         param: click.Parameter | None,
         value: int,
     ) -> int:
+        del ctx, param
         if value <= 0:
             msg = "Must be positive"
             raise click.BadParameter(message=msg)
@@ -28,8 +32,9 @@ def test_multi_callback_with_sequence_validator() -> None:
         param: click.Parameter | None,
         value: int,
     ) -> int:
-        if value > 100:
-            msg = "Must be <= 100"
+        del ctx, param
+        if value > max_value:
+            msg = f"Must be <= {max_value}"
             raise click.BadParameter(message=msg)
         return value
 
@@ -75,14 +80,17 @@ def test_complex_pipeline() -> None:
     """
     A complex pipeline of transformations and validations.
     """
+    min_value = 1
+    max_value = 100
 
     def validate_range(
         ctx: click.Context | None,
         param: click.Parameter | None,
         value: int,
     ) -> int:
-        if not 1 <= value <= 100:
-            msg = "Must be between 1 and 100"
+        del ctx, param
+        if not min_value <= value <= max_value:
+            msg = f"Must be between {min_value} and {max_value}"
             raise click.BadParameter(message=msg)
         return value
 
@@ -91,6 +99,7 @@ def test_complex_pipeline() -> None:
         param: click.Parameter | None,
         value: int,
     ) -> int:
+        del ctx, param
         return value * 2
 
     def to_percentage(
@@ -98,6 +107,7 @@ def test_complex_pipeline() -> None:
         param: click.Parameter | None,
         value: int,
     ) -> str:
+        del ctx, param
         return f"{value}%"
 
     @click.command()
@@ -137,13 +147,13 @@ def test_real_world_file_validation() -> None:
     """
     A realistic example validating file paths.
     """
-    from pathlib import Path
 
     def validate_file_exists(
         ctx: click.Context | None,
         param: click.Parameter | None,
         value: str,
     ) -> Path:
+        del ctx, param
         path = Path(value)
         if not path.exists():
             msg = f"File not found: {value}"
@@ -155,6 +165,7 @@ def test_real_world_file_validation() -> None:
         param: click.Parameter | None,
         value: Path,
     ) -> Path:
+        del ctx, param
         if not value.is_file():
             msg = f"Not a file: {value}"
             raise click.BadParameter(message=msg)

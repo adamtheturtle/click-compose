@@ -18,6 +18,7 @@ def test_multi_callback_single_callback() -> None:
         param: click.Parameter | None,
         value: int,
     ) -> int:
+        del ctx, param
         return value * 2
 
     @click.command()
@@ -43,6 +44,7 @@ def test_multi_callback_multiple_callbacks() -> None:
         param: click.Parameter | None,
         value: int,
     ) -> int:
+        del ctx, param
         return value * 2
 
     def add_ten(
@@ -50,6 +52,7 @@ def test_multi_callback_multiple_callbacks() -> None:
         param: click.Parameter | None,
         value: int,
     ) -> int:
+        del ctx, param
         return value + 10
 
     @click.command()
@@ -72,12 +75,14 @@ def test_multi_callback_with_validation() -> None:
     """
     Validation callbacks can raise exceptions.
     """
+    max_value = 100
 
     def validate_positive(
         ctx: click.Context | None,
         param: click.Parameter | None,
         value: int,
     ) -> int:
+        del ctx, param
         if value <= 0:
             msg = "Must be positive"
             raise click.BadParameter(message=msg)
@@ -88,8 +93,9 @@ def test_multi_callback_with_validation() -> None:
         param: click.Parameter | None,
         value: int,
     ) -> int:
-        if value > 100:
-            msg = "Must be <= 100"
+        del ctx, param
+        if value > max_value:
+            msg = f"Must be <= {max_value}"
             raise click.BadParameter(message=msg)
         return value
 
@@ -148,6 +154,7 @@ def test_multi_callback_with_type_conversion() -> None:
         param: click.Parameter | None,
         value: int,
     ) -> str:
+        del ctx, param
         return str(object=value)
 
     def add_suffix(
@@ -155,6 +162,7 @@ def test_multi_callback_with_type_conversion() -> None:
         param: click.Parameter | None,
         value: str,
     ) -> str:
+        del ctx, param
         return f"{value} items"
 
     @click.command()

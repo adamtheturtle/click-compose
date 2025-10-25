@@ -86,8 +86,9 @@ def multi_callback(
     """Create a Click-compatible callback that applies multiple callbacks in
     sequence.
 
-    This function takes a sequence of Click callbacks and returns a new callback
-    that applies each callback in order, threading the value through each one.
+    This function takes a sequence of Click callbacks and returns a new
+    callback that applies each callback in order, threading the value through
+    each one.
 
     Args:
         callbacks: A sequence of Click callbacks to apply in order.

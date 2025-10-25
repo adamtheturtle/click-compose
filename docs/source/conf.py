@@ -70,7 +70,9 @@ requires_python = project_metadata["Requires-Python"]
 specifiers = SpecifierSet(specifiers=requires_python)
 (specifier,) = specifiers
 if specifier.operator != ">=":
-    msg = f"We only support '>=' for Requires-Python, got {specifier.operator}."
+    msg = (
+        f"We only support '>=' for Requires-Python, got {specifier.operator}."
+    )
     raise ValueError(msg)
 minimum_python_version = specifier.version
 
