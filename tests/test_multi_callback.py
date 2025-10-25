@@ -2,6 +2,8 @@
 Tests for multi_callback functionality.
 """
 
+from typing import Any, cast
+
 import click
 from click.testing import CliRunner
 
@@ -21,12 +23,14 @@ def test_multi_callback_single_callback() -> None:
         return value * 2
 
     @click.command()
-    @click.option("--num", type=int, callback=multi_callback([double]))
+    @click.option(
+        "--num", type=int, callback=multi_callback(callbacks=[double])
+    )
     def cmd(num: int) -> None:
-        click.echo(num)
+        click.echo(message=num)
 
     runner = CliRunner()
-    result = runner.invoke(cmd, ["--num", "5"])
+    result = runner.invoke(cli=cmd, args=["--num", "5"])
     assert result.exit_code == 0
     assert result.output.strip() == "10"
 
@@ -54,13 +58,13 @@ def test_multi_callback_multiple_callbacks() -> None:
     @click.option(
         "--num",
         type=int,
-        callback=multi_callback([double, add_ten]),
+        callback=multi_callback(callbacks=[double, add_ten]),
     )
     def cmd(num: int) -> None:
-        click.echo(num)
+        click.echo(message=num)
 
     runner = CliRunner()
-    result = runner.invoke(cmd, ["--num", "5"])
+    result = runner.invoke(cli=cmd, args=["--num", "5"])
     assert result.exit_code == 0
     # (5 * 2) + 10 = 20
     assert result.output.strip() == "20"
@@ -78,7 +82,7 @@ def test_multi_callback_with_validation() -> None:
     ) -> int:
         if value <= 0:
             msg = "Must be positive"
-            raise click.BadParameter(msg)
+            raise click.BadParameter(message=msg)
         return value
 
     def validate_max_100(
@@ -88,32 +92,34 @@ def test_multi_callback_with_validation() -> None:
     ) -> int:
         if value > 100:
             msg = "Must be <= 100"
-            raise click.BadParameter(msg)
+            raise click.BadParameter(message=msg)
         return value
 
     @click.command()
     @click.option(
         "--num",
         type=int,
-        callback=multi_callback([validate_positive, validate_max_100]),
+        callback=multi_callback(
+            callbacks=[validate_positive, validate_max_100]
+        ),
     )
     def cmd(num: int) -> None:
-        click.echo(num)
+        click.echo(message=num)
 
     runner = CliRunner()
 
     # Valid value
-    result = runner.invoke(cmd, ["--num", "50"])
+    result = runner.invoke(cli=cmd, args=["--num", "50"])
     assert result.exit_code == 0
     assert result.output.strip() == "50"
 
     # Fails first validator
-    result = runner.invoke(cmd, ["--num", "-5"])
+    result = runner.invoke(cli=cmd, args=["--num", "-5"])
     assert result.exit_code != 0
     assert "Must be positive" in result.output
 
     # Fails second validator
-    result = runner.invoke(cmd, ["--num", "150"])
+    result = runner.invoke(cli=cmd, args=["--num", "150"])
     assert result.exit_code != 0
     assert "Must be <= 100" in result.output
 
@@ -124,12 +130,12 @@ def test_multi_callback_empty_list() -> None:
     """
 
     @click.command()
-    @click.option("--num", type=int, callback=multi_callback([]))
+    @click.option("--num", type=int, callback=multi_callback(callbacks=[]))
     def cmd(num: int) -> None:
-        click.echo(num)
+        click.echo(message=num)
 
     runner = CliRunner()
-    result = runner.invoke(cmd, ["--num", "42"])
+    result = runner.invoke(cli=cmd, args=["--num", "42"])
     assert result.exit_code == 0
     assert result.output.strip() == "42"
 
@@ -144,7 +150,7 @@ def test_multi_callback_with_type_conversion() -> None:
         param: click.Parameter | None,
         value: int,
     ) -> str:
-        return str(value)
+        return str(object=value)
 
     def add_suffix(
         ctx: click.Context | None,
@@ -157,12 +163,12 @@ def test_multi_callback_with_type_conversion() -> None:
     @click.option(
         "--num",
         type=int,
-        callback=multi_callback([to_string, add_suffix]),
+        callback=cast(Any, multi_callback(callbacks=[to_string, add_suffix])),
     )
     def cmd(num: str) -> None:
-        click.echo(num)
+        click.echo(message=num)
 
     runner = CliRunner()
-    result = runner.invoke(cmd, ["--num", "42"])
+    result = runner.invoke(cli=cmd, args=["--num", "42"])
     assert result.exit_code == 0
     assert result.output.strip() == "42 items"

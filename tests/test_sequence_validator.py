@@ -25,14 +25,16 @@ def test_sequence_validator_basic() -> None:
         "--nums",
         multiple=True,
         type=int,
-        callback=sequence_validator(double),
+        callback=sequence_validator(validator=double),
     )
     def cmd(nums: tuple[int, ...]) -> None:
         for num in nums:
-            click.echo(num)
+            click.echo(message=num)
 
     runner = CliRunner()
-    result = runner.invoke(cmd, ["--nums", "1", "--nums", "2", "--nums", "3"])
+    result = runner.invoke(
+        cli=cmd, args=["--nums", "1", "--nums", "2", "--nums", "3"]
+    )
     assert result.exit_code == 0
     assert result.output.strip() == "2\n4\n6"
 
@@ -49,7 +51,7 @@ def test_sequence_validator_with_validation() -> None:
     ) -> int:
         if value <= 0:
             msg = "Must be positive"
-            raise click.BadParameter(msg)
+            raise click.BadParameter(message=msg)
         return value
 
     @click.command()
@@ -57,21 +59,25 @@ def test_sequence_validator_with_validation() -> None:
         "--nums",
         multiple=True,
         type=int,
-        callback=sequence_validator(validate_positive),
+        callback=sequence_validator(validator=validate_positive),
     )
     def cmd(nums: tuple[int, ...]) -> None:
         for num in nums:
-            click.echo(num)
+            click.echo(message=num)
 
     runner = CliRunner()
 
     # Valid values
-    result = runner.invoke(cmd, ["--nums", "1", "--nums", "2", "--nums", "3"])
+    result = runner.invoke(
+        cli=cmd, args=["--nums", "1", "--nums", "2", "--nums", "3"]
+    )
     assert result.exit_code == 0
     assert result.output.strip() == "1\n2\n3"
 
     # Invalid value
-    result = runner.invoke(cmd, ["--nums", "1", "--nums", "-5", "--nums", "3"])
+    result = runner.invoke(
+        cli=cmd, args=["--nums", "1", "--nums", "-5", "--nums", "3"]
+    )
     assert result.exit_code != 0
     assert "Must be positive" in result.output
 
@@ -93,13 +99,13 @@ def test_sequence_validator_empty_sequence() -> None:
         "--nums",
         multiple=True,
         type=int,
-        callback=sequence_validator(double),
+        callback=sequence_validator(validator=double),
     )
     def cmd(nums: tuple[int, ...]) -> None:
-        click.echo(f"Count: {len(nums)}")
+        click.echo(message=f"Count: {len(nums)}")
 
     runner = CliRunner()
-    result = runner.invoke(cmd, [])
+    result = runner.invoke(cli=cmd, args=[])
     assert result.exit_code == 0
     assert "Count: 0" in result.output
 
@@ -121,14 +127,14 @@ def test_sequence_validator_with_type_conversion() -> None:
         "--nums",
         multiple=True,
         type=int,
-        callback=sequence_validator(to_string),
+        callback=sequence_validator(validator=to_string),
     )
     def cmd(nums: tuple[str, ...]) -> None:
         for num in nums:
-            click.echo(num)
+            click.echo(message=num)
 
     runner = CliRunner()
-    result = runner.invoke(cmd, ["--nums", "1", "--nums", "2"])
+    result = runner.invoke(cli=cmd, args=["--nums", "1", "--nums", "2"])
     assert result.exit_code == 0
     assert result.output.strip() == "Number: 1\nNumber: 2"
 
@@ -150,15 +156,15 @@ def test_sequence_validator_preserves_order() -> None:
         "--nums",
         multiple=True,
         type=int,
-        callback=sequence_validator(identity),
+        callback=sequence_validator(validator=identity),
     )
     def cmd(nums: tuple[int, ...]) -> None:
-        click.echo(",".join(str(n) for n in nums))
+        click.echo(message=",".join(str(object=n) for n in nums))
 
     runner = CliRunner()
     result = runner.invoke(
-        cmd,
-        ["--nums", "5", "--nums", "2", "--nums", "8", "--nums", "1"],
+        cli=cmd,
+        args=["--nums", "5", "--nums", "2", "--nums", "8", "--nums", "1"],
     )
     assert result.exit_code == 0
     assert result.output.strip() == "5,2,8,1"

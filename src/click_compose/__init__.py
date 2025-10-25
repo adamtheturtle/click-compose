@@ -2,8 +2,8 @@
 Composable Click callback utilities for building flexible CLI applications.
 """
 
-from collections.abc import Sequence
-from typing import TypeVar
+from collections.abc import Callable, Sequence
+from typing import TypeAlias, TypeVar
 
 import click
 
@@ -15,10 +15,13 @@ __all__ = [
 T = TypeVar("T")
 
 # Type alias for Click callbacks
-_ClickCallback = click.decorators.FC[T]
+_ClickCallback: TypeAlias = Callable[
+    [click.Context | None, click.Parameter | None, T], T
+]
 
 
 def sequence_validator(
+    *,
     validator: _ClickCallback[T],
 ) -> _ClickCallback[Sequence[T]]:
     """Wrap a single-value validator to apply it to a sequence of values.
@@ -77,6 +80,7 @@ def sequence_validator(
 
 
 def multi_callback(
+    *,
     callbacks: Sequence[_ClickCallback[T]],
 ) -> _ClickCallback[T]:
     """Create a Click-compatible callback that applies multiple callbacks in

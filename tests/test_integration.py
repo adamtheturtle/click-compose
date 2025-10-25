@@ -2,6 +2,8 @@
 Integration tests combining multiple click-compose features.
 """
 
+from typing import Any, cast
+
 import click
 from click.testing import CliRunner
 
@@ -20,7 +22,7 @@ def test_multi_callback_with_sequence_validator() -> None:
     ) -> int:
         if value <= 0:
             msg = "Must be positive"
-            raise click.BadParameter(msg)
+            raise click.BadParameter(message=msg)
         return value
 
     def validate_max_100(
@@ -30,35 +32,43 @@ def test_multi_callback_with_sequence_validator() -> None:
     ) -> int:
         if value > 100:
             msg = "Must be <= 100"
-            raise click.BadParameter(msg)
+            raise click.BadParameter(message=msg)
         return value
 
-    combined_validator = multi_callback([validate_positive, validate_max_100])
+    combined_validator = multi_callback(
+        callbacks=[validate_positive, validate_max_100]
+    )
 
     @click.command()
     @click.option(
         "--nums",
         multiple=True,
         type=int,
-        callback=sequence_validator(combined_validator),
+        callback=sequence_validator(validator=combined_validator),
     )
     def cmd(nums: tuple[int, ...]) -> None:
-        click.echo(f"Sum: {sum(nums)}")
+        click.echo(message=f"Sum: {sum(nums)}")
 
     runner = CliRunner()
 
     # Valid values
-    result = runner.invoke(cmd, ["--nums", "10", "--nums", "20", "--nums", "30"])
+    result = runner.invoke(
+        cli=cmd, args=["--nums", "10", "--nums", "20", "--nums", "30"]
+    )
     assert result.exit_code == 0
     assert "Sum: 60" in result.output
 
     # One value fails first validator
-    result = runner.invoke(cmd, ["--nums", "10", "--nums", "-5", "--nums", "30"])
+    result = runner.invoke(
+        cli=cmd, args=["--nums", "10", "--nums", "-5", "--nums", "30"]
+    )
     assert result.exit_code != 0
     assert "Must be positive" in result.output
 
     # One value fails second validator
-    result = runner.invoke(cmd, ["--nums", "10", "--nums", "150", "--nums", "30"])
+    result = runner.invoke(
+        cli=cmd, args=["--nums", "10", "--nums", "150", "--nums", "30"]
+    )
     assert result.exit_code != 0
     assert "Must be <= 100" in result.output
 
@@ -75,7 +85,7 @@ def test_complex_pipeline() -> None:
     ) -> int:
         if not 1 <= value <= 100:
             msg = "Must be between 1 and 100"
-            raise click.BadParameter(msg)
+            raise click.BadParameter(message=msg)
         return value
 
     def double(
@@ -98,19 +108,21 @@ def test_complex_pipeline() -> None:
         multiple=True,
         type=int,
         callback=sequence_validator(
-            multi_callback([validate_range, double, to_percentage])
+            validator=multi_callback(
+                callbacks=[validate_range, double, to_percentage]
+            )
         ),
     )
     def cmd(values: tuple[str, ...]) -> None:
         for val in values:
-            click.echo(val)
+            click.echo(message=val)
 
     runner = CliRunner()
 
     # Valid values: 50 -> 100%, 25 -> 50%, 10 -> 20%
     result = runner.invoke(
-        cmd,
-        ["--values", "50", "--values", "25", "--values", "10"],
+        cli=cmd,
+        args=["--values", "50", "--values", "25", "--values", "10"],
     )
     assert result.exit_code == 0
     assert "100%" in result.output
@@ -118,7 +130,7 @@ def test_complex_pipeline() -> None:
     assert "20%" in result.output
 
     # Invalid value (out of range)
-    result = runner.invoke(cmd, ["--values", "150"])
+    result = runner.invoke(cli=cmd, args=["--values", "150"])
     assert result.exit_code != 0
     assert "Must be between 1 and 100" in result.output
 
@@ -137,7 +149,7 @@ def test_real_world_file_validation() -> None:
         path = Path(value)
         if not path.exists():
             msg = f"File not found: {value}"
-            raise click.BadParameter(msg)
+            raise click.BadParameter(message=msg)
         return path
 
     def validate_is_file(
@@ -147,7 +159,7 @@ def test_real_world_file_validation() -> None:
     ) -> Path:
         if not value.is_file():
             msg = f"Not a file: {value}"
-            raise click.BadParameter(msg)
+            raise click.BadParameter(message=msg)
         return value
 
     @click.command()
@@ -155,24 +167,29 @@ def test_real_world_file_validation() -> None:
         "--files",
         multiple=True,
         type=str,
-        callback=sequence_validator(
-            multi_callback([validate_file_exists, validate_is_file])
+        callback=cast(
+            Any,
+            sequence_validator(
+                validator=multi_callback(
+                    callbacks=[validate_file_exists, validate_is_file]
+                )
+            ),
         ),
     )
     def cmd(files: tuple[Path, ...]) -> None:
-        click.echo(f"Processing {len(files)} files")
+        click.echo(message=f"Processing {len(files)} files")
         for file in files:
-            click.echo(f"  - {file.name}")
+            click.echo(message=f"  - {file.name}")
 
     runner = CliRunner()
 
     # Test with LICENSE file (should exist)
-    result = runner.invoke(cmd, ["--files", "LICENSE"])
+    result = runner.invoke(cli=cmd, args=["--files", "LICENSE"])
     assert result.exit_code == 0
     assert "Processing 1 files" in result.output
     assert "LICENSE" in result.output
 
     # Test with non-existent file
-    result = runner.invoke(cmd, ["--files", "nonexistent.txt"])
+    result = runner.invoke(cli=cmd, args=["--files", "nonexistent.txt"])
     assert result.exit_code != 0
     assert "File not found" in result.output
