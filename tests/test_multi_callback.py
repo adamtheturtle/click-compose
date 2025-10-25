@@ -2,8 +2,6 @@
 Tests for multi_callback functionality.
 """
 
-from typing import Any, cast
-
 import click
 from click.testing import CliRunner
 
@@ -163,7 +161,7 @@ def test_multi_callback_with_type_conversion() -> None:
     @click.option(
         "--num",
         type=int,
-        callback=cast(Any, multi_callback(callbacks=[to_string, add_suffix])),
+        callback=multi_callback(callbacks=[to_string, add_suffix]),
     )
     def cmd(num: str) -> None:
         click.echo(message=num)

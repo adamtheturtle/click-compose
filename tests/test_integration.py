@@ -2,8 +2,6 @@
 Integration tests combining multiple click-compose features.
 """
 
-from typing import Any, cast
-
 import click
 from click.testing import CliRunner
 
@@ -167,13 +165,10 @@ def test_real_world_file_validation() -> None:
         "--files",
         multiple=True,
         type=str,
-        callback=cast(
-            Any,
-            sequence_validator(
-                validator=multi_callback(
-                    callbacks=[validate_file_exists, validate_is_file]
-                )
-            ),
+        callback=sequence_validator(
+            validator=multi_callback(
+                callbacks=[validate_file_exists, validate_is_file]
+            )
         ),
     )
     def cmd(files: tuple[Path, ...]) -> None:
