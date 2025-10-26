@@ -1,13 +1,13 @@
 Usage
 =====
 
-|project| provides two main utilities for composing Click callbacks:
+|project| provides utilities for composing Click callbacks.
 
-multi_callback
---------------
+``multi_callback``
+------------------
 
-The ``multi_callback`` function creates a Click-compatible callback that applies multiple callbacks in sequence.
-This is useful when you want to apply multiple transformations or validations to a single value.
+``multi_callback`` creates a Click-compatible callback that applies multiple callbacks in sequence.
+This is useful when you want to apply multiple transformations or validators to a single value.
 
 .. code-block:: python
 
@@ -24,10 +24,10 @@ This is useful when you want to apply multiple transformations or validations to
 
 The value is passed through each callback in order, with the output of one callback becoming the input to the next.
 
-sequence_validator
-------------------
+``sequence_validator``
+----------------------
 
-The ``sequence_validator`` function wraps a single-value validator to apply it to a sequence of values.
+``sequence_validator`` wraps a single-value validator to apply it to a sequence of values.
 This is particularly useful with Click's ``multiple=True`` option parameter.
 
 .. code-block:: python
@@ -45,26 +45,3 @@ This is particularly useful with Click's ``multiple=True`` option parameter.
        click.echo(values)
 
 Each element in the sequence is validated individually, and validation errors are raised for the specific element that fails.
-
-Combining Both
---------------
-
-You can combine both utilities to create powerful validation pipelines for sequences:
-
-.. code-block:: python
-
-   from click_compose import multi_callback, sequence_validator
-
-   @click.command()
-   @click.option(
-       "--values",
-       multiple=True,
-       type=int,
-       callback=sequence_validator(
-           multi_callback([validator1, validator2])
-       ),
-   )
-   def cmd(values):
-       click.echo(values)
-
-This applies both validators to each element in the sequence.
