@@ -68,7 +68,6 @@ optional-dependencies.dev = [
     "sphinx-pyproject==0.3.0",
     "sphinx-substitution-extensions==2025.6.6",
     "sphinxcontrib-spelling==8.0.1",
-    "types-click==7.1.8",
     "vulture==2.14",
     "yamlfix==1.19.0",
 ]
