@@ -22,6 +22,7 @@ author = _pyproject_config.author
 
 extensions = [
     "sphinx.ext.autodoc",
+    "sphinx.ext.napoleon",
     "sphinx.ext.intersphinx",
     "sphinx_copybutton",
     "sphinxcontrib.spelling",

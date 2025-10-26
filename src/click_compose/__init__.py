@@ -35,31 +35,6 @@ def sequence_validator(
 
     Returns:
         A Click callback that validates a sequence of values of type T.
-
-    Example:
-        ```python
-        import click
-        from click_compose import sequence_validator
-
-        def validate_positive(
-            ctx: click.Context | None,
-            param: click.Parameter | None,
-            value: int,
-        ) -> int:
-            if value <= 0:
-                raise click.BadParameter("Must be positive")
-            return value
-
-        @click.command()
-        @click.option(
-            "--numbers",
-            multiple=True,
-            type=int,
-            callback=sequence_validator(validate_positive),
-        )
-        def cmd(numbers: tuple[int, ...]) -> None:
-            click.echo(f"Numbers: {numbers}")
-        ```
     """
 
     def callback(
@@ -95,39 +70,6 @@ def multi_callback(
 
     Returns:
         A Click callback that applies all the given callbacks in sequence.
-
-    Example:
-        ```python
-        import click
-        from click_compose import multi_callback
-
-        def validate_positive(
-            ctx: click.Context | None,
-            param: click.Parameter | None,
-            value: int,
-        ) -> int:
-            if value <= 0:
-                raise click.BadParameter("Must be positive")
-            return value
-
-        def validate_max_100(
-            ctx: click.Context | None,
-            param: click.Parameter | None,
-            value: int,
-        ) -> int:
-            if value > 100:
-                raise click.BadParameter("Must be <= 100")
-            return value
-
-        @click.command()
-        @click.option(
-            "--count",
-            type=int,
-            callback=multi_callback([validate_positive, validate_max_100]),
-        )
-        def cmd(count: int) -> None:
-            click.echo(f"Count: {count}")
-        ```
     """
 
     def callback(
