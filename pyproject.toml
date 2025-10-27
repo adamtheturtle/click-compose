@@ -1,0 +1,337 @@
+[build-system]
+build-backend = "setuptools.build_meta"
+requires = [
+    "setuptools",
+    "setuptools-scm>=9.2.2",
+]
+
+[project]
+name = "click-compose"
+description = "Composable Click callback utilities for building flexible CLI applications."
+readme = { file = "README.rst", content-type = "text/x-rst" }
+keywords = [
+    "callbacks",
+    "cli",
+    "click",
+    "validation",
+]
+license = "MIT"
+authors = [
+    { name = "Adam Dangoor", email = "adamdangoor@gmail.com" },
+]
+requires-python = ">=3.11"
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+dynamic = [
+    "version",
+]
+dependencies = [
+    "click>=8.0.0",
+]
+optional-dependencies.dev = [
+    "actionlint-py==1.7.8.24",
+    "check-manifest==0.51",
+    "deptry==0.23.1",
+    "doc8==2.0.0",
+    "docformatter==1.7.7",
+    "furo==2025.9.25",
+    "interrogate==1.7.0",
+    "mypy[faster-cache]==1.18.2",
+    "mypy-strict-kwargs==2025.4.3",
+    "packaging>=24.0",
+    "pre-commit==4.3.0",
+    "pydocstyle==6.3",
+    "pygments==2.19.2",
+    "pylint[spelling]==4.0.2",
+    "pylint-per-file-ignores==3.1.0",
+    "pyproject-fmt==2.11.0",
+    "pyright==1.1.406",
+    "pyroma==5.0",
+    "pytest==8.4.2",
+    "pytest-cov==7.0.0",
+    "pytest-regressions==2.8.3",
+    "pyyaml==6.0.3",
+    "ruff==0.14.2",
+    "shellcheck-py==0.11.0.1",
+    "shfmt-py==3.12.0.2",
+    "sphinx==8.2.3",
+    "sphinx-copybutton==0.5.2",
+    "sphinx-lint==1.0.0",
+    "sphinx-pyproject==0.3.0",
+    "sphinx-substitution-extensions==2025.6.6",
+    "sphinxcontrib-spelling==8.0.1",
+    "vulture==2.14",
+    "yamlfix==1.19.0",
+]
+optional-dependencies.release = [ "check-wheel-contents==0.6.3" ]
+urls.Source = "https://github.com/adamtheturtle/click-compose"
+
+[tool.setuptools]
+zip-safe = false
+
+[tool.setuptools.packages.find]
+where = [
+    "src",
+]
+
+[tool.setuptools.package-data]
+click_compose = [
+    "py.typed",
+]
+
+[tool.distutils.bdist_wheel]
+universal = true
+
+[tool.setuptools_scm]
+version_scheme = "post-release"
+
+[tool.ruff]
+line-length = 79
+
+lint.select = [
+    "ALL",
+]
+lint.ignore = [
+    # Ruff warns that this conflicts with the formatter.
+    "COM812",
+    # Allow our chosen docstring line-style - no one-line summary.
+    "D200",
+    "D205",
+    "D212",
+    # Ruff warns that this conflicts with the formatter.
+    "ISC001",
+    # Ignore "too-many-*" errors as they seem to get in the way more than
+    # helping.
+    "PLR0913",
+    # We use asserts for type narrowing.
+    "S101",
+]
+
+lint.per-file-ignores."docs/source/*.py" = [
+    # Allow asserts in docs.
+    "S101",
+]
+
+lint.per-file-ignores."tests/*.py" = [
+    # Allow asserts in tests.
+    "S101",
+]
+
+# Do not automatically remove commented out code.
+# We comment out code during development, and with VSCode auto-save, this code
+# is sometimes annoyingly removed.
+lint.unfixable = [
+    "ERA001",
+]
+lint.pydocstyle.convention = "google"
+
+[tool.pylint]
+
+[tool.pylint.'MASTER']
+
+persistent = true
+jobs = 0
+
+load-plugins = [
+    "pylint_per_file_ignores",
+    'pylint.extensions.bad_builtin',
+    'pylint.extensions.comparison_placement',
+    'pylint.extensions.consider_refactoring_into_while_condition',
+    'pylint.extensions.docparams',
+    'pylint.extensions.dunder',
+    'pylint.extensions.eq_without_hash',
+    'pylint.extensions.for_any_all',
+    'pylint.extensions.mccabe',
+    'pylint.extensions.no_self_use',
+    'pylint.extensions.overlapping_exceptions',
+    'pylint.extensions.private_import',
+    'pylint.extensions.redefined_loop_name',
+    'pylint.extensions.redefined_variable_type',
+    'pylint.extensions.set_membership',
+    'pylint.extensions.typing',
+]
+
+unsafe-load-any-extension = false
+
+[tool.pylint.'MESSAGES CONTROL']
+
+enable = [
+    'bad-inline-option',
+    'deprecated-pragma',
+    'file-ignored',
+    'spelling',
+    'use-symbolic-message-instead',
+    'useless-suppression',
+]
+
+disable = [
+    'too-few-public-methods',
+    'too-many-locals',
+    'too-many-arguments',
+    'too-many-instance-attributes',
+    'too-many-return-statements',
+    'too-many-lines',
+    'locally-disabled',
+    # Let ruff handle long lines
+    'line-too-long',
+    # Let ruff handle unused imports
+    'unused-import',
+    # Let ruff deal with sorting
+    'ungrouped-imports',
+    # We don't need everything to be documented because of mypy
+    'missing-type-doc',
+    'missing-return-type-doc',
+    # Too difficult to please
+    'duplicate-code',
+    # Let ruff handle imports
+    'wrong-import-order',
+    # mypy does not want untyped parameters.
+    'useless-type-doc',
+]
+
+per-file-ignores = [
+    "docs/source/conf.py:invalid-name",
+]
+
+[tool.pylint.'FORMAT']
+
+single-line-if-stmt = false
+
+[tool.pylint.'SPELLING']
+
+spelling-dict = 'en_US'
+spelling-private-dict-file = 'spelling_private_dict.txt'
+spelling-store-unknown-words = 'no'
+
+[tool.docformatter]
+make-summary-multi-line = true
+
+[tool.check-manifest]
+
+ignore = [
+    ".vscode",
+    ".vscode/**",
+    ".yamlfmt",
+    ".pre-commit-config.yaml",
+    ".prettierrc",
+    "CHANGELOG.rst",
+    "LICENSE",
+    "Makefile",
+    "ci",
+    "ci/**",
+    "docs",
+    "docs/**",
+    ".git_archival.txt",
+    "spelling_private_dict.txt",
+    "tests",
+    "tests/**",
+]
+
+[tool.deptry]
+pep621_dev_dependency_groups = [
+    "dev",
+    "release",
+]
+
+[tool.pyproject-fmt]
+indent = 4
+keep_full_version = true
+max_supported_python = "3.13"
+
+[tool.pytest.ini_options]
+
+xfail_strict = true
+log_cli = true
+
+[tool.coverage.run]
+
+branch = true
+
+[tool.coverage.report]
+exclude_also = [
+    "if TYPE_CHECKING:",
+]
+
+[tool.mypy]
+
+strict = true
+files = [ "." ]
+exclude = [ "build" ]
+follow_untyped_imports = true
+plugins = [
+    "mypy_strict_kwargs",
+]
+
+[tool.pyright]
+
+enableTypeIgnoreComments = false
+reportUnnecessaryTypeIgnoreComment = true
+typeCheckingMode = "strict"
+
+[tool.interrogate]
+fail-under = 100
+omit-covered-files = true
+verbose = 2
+
+[tool.doc8]
+
+max_line_length = 2000
+ignore_path = [
+    "./.eggs",
+    "./docs/build",
+    "./docs/build/spelling/output.txt",
+    "./node_modules",
+    "./src/*.egg-info/",
+    "./src/*/_setuptools_scm_version.txt",
+]
+
+[tool.vulture]
+ignore_names = [
+    # pytest configuration
+    "pytest_collect_file",
+    "pytest_collection_modifyitems",
+    "pytest_plugins",
+    # pytest fixtures
+    "fixture_*",
+    # Sphinx
+    "autoclass_content",
+    "autodoc_member_order",
+    "copybutton_exclude",
+    "extensions",
+    "html_show_copyright",
+    "html_show_sourcelink",
+    "html_show_sphinx",
+    "html_theme",
+    "html_theme_options",
+    "html_title",
+    "htmlhelp_basename",
+    "intersphinx_mapping",
+    "language",
+    "linkcheck_ignore",
+    "linkcheck_retries",
+    "master_doc",
+    "nitpicky",
+    "nitpick_ignore",
+    "project_copyright",
+    "pygments_style",
+    "rst_prolog",
+    "source_suffix",
+    "spelling_word_list_filename",
+    "suppress_warnings",
+    "templates_path",
+    "warning_is_error",
+]
+
+exclude = [ ".venv" ]
+
+[tool.yamlfix]
+section_whitelines = 1
+whitelines = 1
