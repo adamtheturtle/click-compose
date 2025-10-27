@@ -202,6 +202,7 @@ disable = [
 
 per-file-ignores = [
     "docs/source/conf.py:invalid-name",
+    "doccmd_*_rst_*.py:invalid-name",
 ]
 
 [tool.pylint.'FORMAT']
@@ -331,6 +332,8 @@ ignore_names = [
     "suppress_warnings",
     "templates_path",
     "warning_is_error",
+    # Example commands in documentation
+    "cmd",
 ]
 
 exclude = [ ".venv" ]

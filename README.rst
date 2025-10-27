@@ -69,15 +69,11 @@ Combine multiple callbacks into a single callback that applies them in sequence:
    @click.option(
        "--count",
        type=int,
-       callback=multi_callback([validate_positive, validate_max_100]),
+       callback=multi_callback(callbacks=[validate_positive, validate_max_100]),
    )
    def cmd(count: int) -> None:
        """Example command with multiple validators."""
        click.echo(f"Count: {count}")
-
-
-   if __name__ == "__main__":
-       cmd()
 
 sequence_validator
 ~~~~~~~~~~~~~~~~~~
@@ -110,15 +106,11 @@ Apply a validator to each element in a sequence (useful with ``multiple=True``):
        "--numbers",
        multiple=True,
        type=int,
-       callback=sequence_validator(validate_positive),
+       callback=sequence_validator(validator=validate_positive),
    )
    def cmd(numbers: tuple[int, ...]) -> None:
        """Example command with sequence validation."""
        click.echo(f"Sum: {sum(numbers)}")
-
-
-   if __name__ == "__main__":
-       cmd()
 
 Documentation
 -------------
