@@ -46,7 +46,7 @@ Combine multiple callbacks into a single callback that applies them in sequence:
        """Validate that value is positive."""
        if value <= 0:
            msg = "Must be positive"
-           raise click.BadParameter(msg)
+           raise click.BadParameter(message=msg)
        return value
 
 
@@ -61,7 +61,7 @@ Combine multiple callbacks into a single callback that applies them in sequence:
        """Validate that value is at most 100."""
        if value > MAX_VALUE:
            msg = "Must be <= 100"
-           raise click.BadParameter(msg)
+           raise click.BadParameter(message=msg)
        return value
 
 
@@ -73,7 +73,7 @@ Combine multiple callbacks into a single callback that applies them in sequence:
    )
    def cmd(count: int) -> None:
        """Example command with multiple validators."""
-       click.echo(f"Count: {count}")
+       click.echo(message=f"Count: {count}")
 
 sequence_validator
 ~~~~~~~~~~~~~~~~~~
@@ -90,14 +90,14 @@ Apply a validator to each element in a sequence (useful with ``multiple=True``):
 
 
    def validate_positive(
-       _ctx: click.Context,
-       _param: click.Parameter,
+       _ctx: click.Context | None,
+       _param: click.Parameter | None,
        value: int,
    ) -> int:
        """Validate that value is positive."""
        if value <= 0:
            msg = "Must be positive"
-           raise click.BadParameter(msg)
+           raise click.BadParameter(message=msg)
        return value
 
 
@@ -110,7 +110,7 @@ Apply a validator to each element in a sequence (useful with ``multiple=True``):
    )
    def cmd(numbers: tuple[int, ...]) -> None:
        """Example command with sequence validation."""
-       click.echo(f"Sum: {sum(numbers)}")
+       click.echo(message=f"Sum: {sum(numbers)}")
 
 Documentation
 -------------

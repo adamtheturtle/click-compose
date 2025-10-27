@@ -71,7 +71,7 @@ This is particularly useful with Click's ``multiple=True`` option parameter.
 
 
    def validate_single_value(
-       _ctx: click.Context, _param: click.Parameter, value: int
+       _ctx: click.Context | None, _param: click.Parameter | None, value: int
    ) -> int:
        """Validate a single value."""
        return value
@@ -87,9 +87,5 @@ This is particularly useful with Click's ``multiple=True`` option parameter.
    def cmd(values: tuple[int, ...]) -> None:
        """Example command using sequence_validator."""
        click.echo(message=values)
-
-
-   if __name__ == "__main__":
-       cmd([])
 
 Each element in the sequence is validated individually, and validation errors are raised for the specific element that fails.
