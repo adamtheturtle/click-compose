@@ -221,6 +221,7 @@ ignore = [
     ".vscode/**",
     ".yamlfmt",
     ".pre-commit-config.yaml",
+    ".prettierrc",
     "CHANGELOG.rst",
     "LICENSE",
     "Makefile",
