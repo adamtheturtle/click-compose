@@ -225,7 +225,7 @@ repos:
         stages: [pre-commit]
       - id: vulture
         name: vulture
-        entry: uv run --extra=dev vulture
+        entry: uv run --extra=dev vulture .
         language: python
         pass_filenames: false
         additional_dependencies: [uv==0.6.3]

@@ -18,6 +18,7 @@ def test_multi_callback_single_callback() -> None:
         param: click.Parameter | None,
         value: int,
     ) -> int:
+        """Double the value."""
         del ctx, param
         return value * 2
 
@@ -26,6 +27,7 @@ def test_multi_callback_single_callback() -> None:
         "--num", type=int, callback=multi_callback(callbacks=[double])
     )
     def cmd(num: int) -> None:
+        """Test command."""
         click.echo(message=num)
 
     runner = CliRunner()
@@ -44,6 +46,7 @@ def test_multi_callback_multiple_callbacks() -> None:
         param: click.Parameter | None,
         value: int,
     ) -> int:
+        """Double the value."""
         del ctx, param
         return value * 2
 
@@ -52,6 +55,7 @@ def test_multi_callback_multiple_callbacks() -> None:
         param: click.Parameter | None,
         value: int,
     ) -> int:
+        """Add ten to the value."""
         del ctx, param
         return value + 10
 
@@ -62,6 +66,7 @@ def test_multi_callback_multiple_callbacks() -> None:
         callback=multi_callback(callbacks=[double, add_ten]),
     )
     def cmd(num: int) -> None:
+        """Test command."""
         click.echo(message=num)
 
     runner = CliRunner()
@@ -82,6 +87,7 @@ def test_multi_callback_with_validation() -> None:
         param: click.Parameter | None,
         value: int,
     ) -> int:
+        """Validate that value is positive."""
         del ctx, param
         if value <= 0:
             msg = "Must be positive"
@@ -93,6 +99,7 @@ def test_multi_callback_with_validation() -> None:
         param: click.Parameter | None,
         value: int,
     ) -> int:
+        """Validate that value is at most 100."""
         del ctx, param
         if value > max_value:
             msg = f"Must be <= {max_value}"
@@ -108,6 +115,7 @@ def test_multi_callback_with_validation() -> None:
         ),
     )
     def cmd(num: int) -> None:
+        """Test command."""
         click.echo(message=num)
 
     runner = CliRunner()
@@ -136,6 +144,7 @@ def test_multi_callback_empty_list() -> None:
     @click.command()
     @click.option("--num", type=int, callback=multi_callback(callbacks=[]))
     def cmd(num: int) -> None:
+        """Test command."""
         click.echo(message=num)
 
     runner = CliRunner()
@@ -154,6 +163,7 @@ def test_multi_callback_with_type_conversion() -> None:
         param: click.Parameter | None,
         value: int,
     ) -> str:
+        """Convert value to string."""
         del ctx, param
         return str(object=value)
 
@@ -162,6 +172,7 @@ def test_multi_callback_with_type_conversion() -> None:
         param: click.Parameter | None,
         value: str,
     ) -> str:
+        """Add suffix to string."""
         del ctx, param
         return f"{value} items"
 
@@ -172,6 +183,7 @@ def test_multi_callback_with_type_conversion() -> None:
         callback=multi_callback(callbacks=[to_string, add_suffix]),
     )
     def cmd(num: str) -> None:
+        """Test command."""
         click.echo(message=num)
 
     runner = CliRunner()
@@ -190,6 +202,7 @@ def test_multi_callback_with_fixture(sample_value: int) -> None:
         param: click.Parameter | None,
         value: int,
     ) -> int:
+        """Return value unchanged."""
         del ctx, param
         return value
 
@@ -198,9 +211,10 @@ def test_multi_callback_with_fixture(sample_value: int) -> None:
         "--num", type=int, callback=multi_callback(callbacks=[identity])
     )
     def cmd(num: int) -> None:
+        """Test command."""
         click.echo(message=num)
 
     runner = CliRunner()
-    result = runner.invoke(cli=cmd, args=["--num", str(sample_value)])
+    result = runner.invoke(cli=cmd, args=["--num", str(object=sample_value)])
     assert result.exit_code == 0
-    assert result.output.strip() == str(sample_value)
+    assert result.output.strip() == str(object=sample_value)

@@ -21,6 +21,7 @@ def test_multi_callback_with_sequence_validator() -> None:
         param: click.Parameter | None,
         value: int,
     ) -> int:
+        """Validate that value is positive."""
         del ctx, param
         if value <= 0:
             msg = "Must be positive"
@@ -32,6 +33,7 @@ def test_multi_callback_with_sequence_validator() -> None:
         param: click.Parameter | None,
         value: int,
     ) -> int:
+        """Validate that value is at most 100."""
         del ctx, param
         if value > max_value:
             msg = f"Must be <= {max_value}"
@@ -50,6 +52,7 @@ def test_multi_callback_with_sequence_validator() -> None:
         callback=sequence_validator(validator=combined_validator),
     )
     def cmd(nums: tuple[int, ...]) -> None:
+        """Test command."""
         click.echo(message=f"Sum: {sum(nums)}")
 
     runner = CliRunner()
@@ -88,6 +91,7 @@ def test_complex_pipeline() -> None:
         param: click.Parameter | None,
         value: int,
     ) -> int:
+        """Validate that value is within the allowed range."""
         del ctx, param
         if not min_value <= value <= max_value:
             msg = f"Must be between {min_value} and {max_value}"
@@ -99,6 +103,7 @@ def test_complex_pipeline() -> None:
         param: click.Parameter | None,
         value: int,
     ) -> int:
+        """Double the value."""
         del ctx, param
         return value * 2
 
@@ -107,6 +112,7 @@ def test_complex_pipeline() -> None:
         param: click.Parameter | None,
         value: int,
     ) -> str:
+        """Convert value to percentage string."""
         del ctx, param
         return f"{value}%"
 
@@ -122,6 +128,7 @@ def test_complex_pipeline() -> None:
         ),
     )
     def cmd(values: tuple[str, ...]) -> None:
+        """Test command."""
         for val in values:
             click.echo(message=val)
 
@@ -153,6 +160,7 @@ def test_real_world_file_validation() -> None:
         param: click.Parameter | None,
         value: str,
     ) -> Path:
+        """Validate that file exists."""
         del ctx, param
         path = Path(value)
         if not path.exists():
@@ -165,6 +173,7 @@ def test_real_world_file_validation() -> None:
         param: click.Parameter | None,
         value: Path,
     ) -> Path:
+        """Validate that path is a file."""
         del ctx, param
         if not value.is_file():
             msg = f"Not a file: {value}"
@@ -183,6 +192,7 @@ def test_real_world_file_validation() -> None:
         ),
     )
     def cmd(files: tuple[Path, ...]) -> None:
+        """Test command."""
         click.echo(message=f"Processing {len(files)} files")
         for file in files:
             click.echo(message=f"  - {file.name}")

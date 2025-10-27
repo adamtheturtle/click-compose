@@ -18,6 +18,7 @@ def test_sequence_validator_basic() -> None:
         param: click.Parameter | None,
         value: int,
     ) -> int:
+        """Double the value."""
         del ctx, param
         return value * 2
 
@@ -29,6 +30,7 @@ def test_sequence_validator_basic() -> None:
         callback=sequence_validator(validator=double),
     )
     def cmd(nums: tuple[int, ...]) -> None:
+        """Test command."""
         for num in nums:
             click.echo(message=num)
 
@@ -50,6 +52,7 @@ def test_sequence_validator_with_validation() -> None:
         param: click.Parameter | None,
         value: int,
     ) -> int:
+        """Validate that value is positive."""
         del ctx, param
         if value <= 0:
             msg = "Must be positive"
@@ -64,6 +67,7 @@ def test_sequence_validator_with_validation() -> None:
         callback=sequence_validator(validator=validate_positive),
     )
     def cmd(nums: tuple[int, ...]) -> None:
+        """Test command."""
         for num in nums:
             click.echo(message=num)
 
@@ -94,6 +98,7 @@ def test_sequence_validator_empty_sequence() -> None:
         param: click.Parameter | None,
         value: int,
     ) -> int:
+        """Double the value."""
         del ctx, param
         return value * 2
 
@@ -105,6 +110,7 @@ def test_sequence_validator_empty_sequence() -> None:
         callback=sequence_validator(validator=double),
     )
     def cmd(nums: tuple[int, ...]) -> None:
+        """Test command."""
         click.echo(message=f"Count: {len(nums)}")
 
     runner = CliRunner()
@@ -128,6 +134,7 @@ def test_sequence_validator_with_type_conversion() -> None:
         param: click.Parameter | None,
         value: int,
     ) -> str:
+        """Convert value to string."""
         del ctx, param
         return f"Number: {value}"
 
@@ -139,6 +146,7 @@ def test_sequence_validator_with_type_conversion() -> None:
         callback=sequence_validator(validator=to_string),
     )
     def cmd(nums: tuple[str, ...]) -> None:
+        """Test command."""
         for num in nums:
             click.echo(message=num)
 
@@ -158,6 +166,7 @@ def test_sequence_validator_preserves_order() -> None:
         param: click.Parameter | None,
         value: int,
     ) -> int:
+        """Return value unchanged."""
         del ctx, param
         return value
 
@@ -169,6 +178,7 @@ def test_sequence_validator_preserves_order() -> None:
         callback=sequence_validator(validator=identity),
     )
     def cmd(nums: tuple[int, ...]) -> None:
+        """Test command."""
         click.echo(message=",".join(str(object=n) for n in nums))
 
     runner = CliRunner()
