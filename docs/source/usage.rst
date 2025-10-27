@@ -11,7 +11,10 @@ This is useful when you want to apply multiple transformations or validators to 
 
 .. code-block:: python
 
+   """Example of using multi_callback."""
+
    from click_compose import multi_callback
+
 
    @click.command()
    @click.option(
@@ -20,6 +23,7 @@ This is useful when you want to apply multiple transformations or validators to 
        callback=multi_callback([validator1, validator2, transformer]),
    )
    def cmd(value):
+       """Example command using multi_callback."""
        click.echo(value)
 
 The value is passed through each callback in order, with the output of one callback becoming the input to the next.
@@ -32,7 +36,10 @@ This is particularly useful with Click's ``multiple=True`` option parameter.
 
 .. code-block:: python
 
+   """Example of using sequence_validator."""
+
    from click_compose import sequence_validator
+
 
    @click.command()
    @click.option(
@@ -42,6 +49,7 @@ This is particularly useful with Click's ``multiple=True`` option parameter.
        callback=sequence_validator(validate_single_value),
    )
    def cmd(values):
+       """Example command using sequence_validator."""
        click.echo(values)
 
 Each element in the sequence is validated individually, and validation errors are raised for the specific element that fails.

@@ -31,18 +31,26 @@ Combine multiple callbacks into a single callback that applies them in sequence:
 
 .. code-block:: python
 
+   """Example of using multi_callback to combine validators."""
+
    import click
+
    from click_compose import multi_callback
 
+
    def validate_positive(ctx, param, value):
+       """Validate that value is positive."""
        if value <= 0:
            raise click.BadParameter("Must be positive")
        return value
 
+
    def validate_max_100(ctx, param, value):
+       """Validate that value is at most 100."""
        if value > 100:
            raise click.BadParameter("Must be <= 100")
        return value
+
 
    @click.command()
    @click.option(
@@ -51,6 +59,7 @@ Combine multiple callbacks into a single callback that applies them in sequence:
        callback=multi_callback([validate_positive, validate_max_100]),
    )
    def cmd(count):
+       """Example command with multiple validators."""
        click.echo(f"Count: {count}")
 
 sequence_validator
@@ -60,13 +69,19 @@ Apply a validator to each element in a sequence (useful with ``multiple=True``):
 
 .. code-block:: python
 
+   """Example of using sequence_validator with multiple values."""
+
    import click
+
    from click_compose import sequence_validator
 
+
    def validate_positive(ctx, param, value):
+       """Validate that value is positive."""
        if value <= 0:
            raise click.BadParameter("Must be positive")
        return value
+
 
    @click.command()
    @click.option(
@@ -76,6 +91,7 @@ Apply a validator to each element in a sequence (useful with ``multiple=True``):
        callback=sequence_validator(validate_positive),
    )
    def cmd(numbers):
+       """Example command with sequence validation."""
        click.echo(f"Sum: {sum(numbers)}")
 
 Documentation

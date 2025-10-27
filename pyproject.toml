@@ -118,9 +118,40 @@ lint.ignore = [
     "S101",
 ]
 
-lint.per-file-ignores."docs/source/*.py" = [
+lint.per-file-ignores."doccmd_*.py" = [
+    # Allow missing type annotations in documentation examples.
+    "ANN001",
+    "ANN201",
+    # Allow unused arguments in documentation examples.
+    "ARG001",
+    # Allow string literals in exceptions in documentation examples.
+    "EM101",
+    # Allow undefined names in documentation examples.
+    "F821",
+    # Allow magic values in documentation examples.
+    "PLR2004",
     # Allow asserts in docs.
     "S101",
+    # Allow long messages in exceptions in documentation examples.
+    "TRY003",
+]
+
+lint.per-file-ignores."docs/source/*.py" = [
+    # Allow missing type annotations in documentation examples.
+    "ANN001",
+    "ANN201",
+    # Allow unused arguments in documentation examples.
+    "ARG001",
+    # Allow string literals in exceptions in documentation examples.
+    "EM101",
+    # Allow undefined names in documentation examples.
+    "F821",
+    # Allow magic values in documentation examples.
+    "PLR2004",
+    # Allow asserts in docs.
+    "S101",
+    # Allow long messages in exceptions in documentation examples.
+    "TRY003",
 ]
 
 lint.per-file-ignores."tests/*.py" = [
@@ -331,9 +362,18 @@ ignore_names = [
     "suppress_warnings",
     "templates_path",
     "warning_is_error",
+    # Documentation examples
+    "cmd",
+    "ctx",
+    "param",
+    "validate_*",
 ]
 
-exclude = [ ".venv" ]
+exclude = [
+    ".venv",
+    "doccmd_*.py",
+    "docs/source/doccmd_*.py",
+]
 
 [tool.yamlfix]
 section_whitelines = 1
