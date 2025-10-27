@@ -112,5 +112,4 @@ Reference
 
    install
    usage
-   contributing
    changelog

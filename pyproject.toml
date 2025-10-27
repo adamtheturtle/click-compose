@@ -222,8 +222,6 @@ ignore = [
     ".yamlfmt",
     ".pre-commit-config.yaml",
     "CHANGELOG.rst",
-    "CODE_OF_CONDUCT.rst",
-    "CONTRIBUTING.rst",
     "LICENSE",
     "Makefile",
     "ci",
