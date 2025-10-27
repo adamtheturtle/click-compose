@@ -1,5 +1,5 @@
 """
-Tests for deduplicate helper.
+Tests for ``deduplicate`` helper.
 """
 
 import click
