@@ -93,6 +93,7 @@ warning_is_error = True
 # See: https://github.com/sphinx-doc/sphinx/issues/10974
 nitpick_ignore = [
     ("py:class", "click_compose.T"),
+    ("py:class", "click_compose.U"),
 ]
 
 autoclass_content = "both"
