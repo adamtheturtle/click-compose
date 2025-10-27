@@ -90,6 +90,12 @@ intersphinx_mapping = {
 }
 nitpicky = True
 warning_is_error = True
+# Ignore TypeVar references - Sphinx treats TypeVars as py:data internally
+# but references them as py:class in type annotations, causing false warnings.
+# See: https://github.com/sphinx-doc/sphinx/issues/10974
+nitpick_ignore = [
+    ("py:class", "click_compose.T"),
+]
 
 autoclass_content = "both"
 
