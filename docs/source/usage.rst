@@ -47,7 +47,7 @@ This is useful when you want to apply multiple transformations or validators to 
    )
    def cmd(value: int) -> None:
        """Example command using multi_callback."""
-       click.echo(value)
+       click.echo(message=value)
 
 
    if __name__ == "__main__":
@@ -86,7 +86,7 @@ This is particularly useful with Click's ``multiple=True`` option parameter.
    )
    def cmd(values: tuple[int, ...]) -> None:
        """Example command using sequence_validator."""
-       click.echo(values)
+       click.echo(message=values)
 
 
    if __name__ == "__main__":
