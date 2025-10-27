@@ -6,11 +6,13 @@ from collections.abc import Callable, Sequence
 from typing import TypeVar
 
 import click
+from beartype import beartype
 
 T = TypeVar("T")
 U = TypeVar("U")
 
 
+@beartype
 def sequence_validator(
     *,
     validator: Callable[[click.Context | None, click.Parameter | None, T], U],
@@ -47,6 +49,7 @@ def sequence_validator(
     return callback
 
 
+@beartype
 def multi_callback(
     *,
     callbacks: Sequence[Callable[..., T]],
