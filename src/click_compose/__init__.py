@@ -3,44 +3,42 @@ Composable Click callback utilities for building flexible CLI applications.
 """
 
 from collections.abc import Callable, Sequence
-from typing import TypeAlias, TypeVar
+from typing import TypeVar
 
 import click
 
 T = TypeVar("T")
-
-# Type alias for Click callbacks
-_ClickCallback: TypeAlias = Callable[
-    [click.Context | None, click.Parameter | None, T], T
-]
+U = TypeVar("U")
 
 
 def sequence_validator(
     *,
-    validator: _ClickCallback[T],
-) -> _ClickCallback[Sequence[T]]:
+    validator: Callable[[click.Context | None, click.Parameter | None, T], U],
+) -> Callable[
+    [click.Context | None, click.Parameter | None, Sequence[T]], Sequence[U]
+]:
     """Wrap a single-value validator to apply it to a sequence of values.
 
     This function takes a Click callback that validates a single value and
     returns a new callback that applies the same validation to each element
-    in a sequence.
+    in a sequence. The validator can transform the type of each element.
 
     Args:
-        validator: A Click callback that validates a single value of type T.
+        validator: A Click callback that validates a single value.
 
     Returns:
-        A Click callback that validates a sequence of values of type T.
+        A Click callback that validates a sequence of values.
     """
 
     def callback(
         ctx: click.Context | None,
         param: click.Parameter | None,
         value: Sequence[T],
-    ) -> Sequence[T]:
+    ) -> Sequence[U]:
         """
         Apply the validator to each element in the sequence.
         """
-        return_values: tuple[T, ...] = ()
+        return_values: tuple[U, ...] = ()
         for item in value:
             returned_value = validator(ctx, param, item)
             return_values = (*return_values, returned_value)
@@ -51,14 +49,15 @@ def sequence_validator(
 
 def multi_callback(
     *,
-    callbacks: Sequence[_ClickCallback[T]],
-) -> _ClickCallback[T]:
+    callbacks: Sequence[Callable[..., T]],
+) -> Callable[[click.Context | None, click.Parameter | None, T], T]:
     """Create a Click-compatible callback that applies multiple callbacks in
     sequence.
 
     This function takes a sequence of Click callbacks and returns a new
     callback that applies each callback in order, threading the value through
-    each one.
+    each one. Each callback can transform the type, allowing for flexible
+    pipelines of transformations and validations.
 
     Args:
         callbacks: A sequence of Click callbacks to apply in order.
@@ -75,8 +74,9 @@ def multi_callback(
         """
         Apply each callback in sequence to the value.
         """
+        result = value
         for cb in callbacks:
-            value = cb(ctx, param, value)
-        return value
+            result = cb(ctx, param, result)
+        return result
 
     return callback
