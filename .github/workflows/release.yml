@@ -122,24 +122,9 @@ jobs:
           # Error if there are no changes.
           skip_dirty_check: true
 
-      - name: Create Linux binary
-        uses: sayyid5416/pyinstaller@v1
-        with:
-          python_ver: '3.13'
-          pyinstaller_ver: ==6.12.0
-          spec: bin/click-compose-wrapper.py
-          requirements: '`echo ${{ steps.build-wheel.outputs.wheel_filename }} > requirements.txt
-            && echo requirements.txt`'
-          options: --onefile, --name "click-compose-linux"
-          upload_exe_with_name: click-compose-linux
-          clean_checkout: false
-
       - name: Create a GitHub release
         uses: ncipollo/release-action@v1
         with:
-          # Use a specific artifact name (not a glob) so that we get a clear
-          # error if the artifact does not exist for some reason.
-          artifacts: dist/click-compose-linux
           artifactErrorsFailBuild: true
           tag: ${{ steps.tag_version.outputs.new_tag }}
           makeLatest: true
