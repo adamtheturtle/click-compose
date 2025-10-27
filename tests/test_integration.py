@@ -199,3 +199,8 @@ def test_real_world_file_validation() -> None:
     result = runner.invoke(cli=cmd, args=["--files", "nonexistent.txt"])
     assert result.exit_code != 0
     assert "File not found" in result.output
+
+    # Test with directory instead of file
+    result = runner.invoke(cli=cmd, args=["--files", "tests"])
+    assert result.exit_code != 0
+    assert "Not a file" in result.output

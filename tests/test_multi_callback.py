@@ -178,3 +178,29 @@ def test_multi_callback_with_type_conversion() -> None:
     result = runner.invoke(cli=cmd, args=["--num", "42"])
     assert result.exit_code == 0
     assert result.output.strip() == "42 items"
+
+
+def test_multi_callback_with_fixture(sample_value: int) -> None:
+    """
+    Multi callback works with pytest fixtures.
+    """
+
+    def identity(
+        ctx: click.Context | None,
+        param: click.Parameter | None,
+        value: int,
+    ) -> int:
+        del ctx, param
+        return value
+
+    @click.command()
+    @click.option(
+        "--num", type=int, callback=multi_callback(callbacks=[identity])
+    )
+    def cmd(num: int) -> None:
+        click.echo(message=num)
+
+    runner = CliRunner()
+    result = runner.invoke(cli=cmd, args=["--num", str(sample_value)])
+    assert result.exit_code == 0
+    assert result.output.strip() == str(sample_value)

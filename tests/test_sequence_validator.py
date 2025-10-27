@@ -112,6 +112,11 @@ def test_sequence_validator_empty_sequence() -> None:
     assert result.exit_code == 0
     assert "Count: 0" in result.output
 
+    # Also test with non-empty sequence to cover the double function
+    result = runner.invoke(cli=cmd, args=["--nums", "5"])
+    assert result.exit_code == 0
+    assert "Count: 1" in result.output
+
 
 def test_sequence_validator_with_type_conversion() -> None:
     """
