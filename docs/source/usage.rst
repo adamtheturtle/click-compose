@@ -13,7 +13,30 @@ This is useful when you want to apply multiple transformations or validators to 
 
    """Example of using multi_callback."""
 
+   import click
+
    from click_compose import multi_callback
+
+
+   def validator1(
+       _ctx: click.Context, _param: click.Parameter, value: int
+   ) -> int:
+       """First validator."""
+       return value
+
+
+   def validator2(
+       _ctx: click.Context, _param: click.Parameter, value: int
+   ) -> int:
+       """Second validator."""
+       return value
+
+
+   def transformer(
+       _ctx: click.Context, _param: click.Parameter, value: int
+   ) -> int:
+       """Transform the value."""
+       return value
 
 
    @click.command()
@@ -22,9 +45,13 @@ This is useful when you want to apply multiple transformations or validators to 
        type=int,
        callback=multi_callback([validator1, validator2, transformer]),
    )
-   def cmd(value):
+   def cmd(value: int) -> None:
        """Example command using multi_callback."""
        click.echo(value)
+
+
+   if __name__ == "__main__":
+       cmd()
 
 The value is passed through each callback in order, with the output of one callback becoming the input to the next.
 
@@ -38,7 +65,16 @@ This is particularly useful with Click's ``multiple=True`` option parameter.
 
    """Example of using sequence_validator."""
 
+   import click
+
    from click_compose import sequence_validator
+
+
+   def validate_single_value(
+       _ctx: click.Context, _param: click.Parameter, value: int
+   ) -> int:
+       """Validate a single value."""
+       return value
 
 
    @click.command()
@@ -48,8 +84,12 @@ This is particularly useful with Click's ``multiple=True`` option parameter.
        type=int,
        callback=sequence_validator(validate_single_value),
    )
-   def cmd(values):
+   def cmd(values: tuple[int, ...]) -> None:
        """Example command using sequence_validator."""
        click.echo(values)
+
+
+   if __name__ == "__main__":
+       cmd()
 
 Each element in the sequence is validated individually, and validation errors are raised for the specific element that fails.

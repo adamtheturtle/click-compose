@@ -38,17 +38,30 @@ Combine multiple callbacks into a single callback that applies them in sequence:
    from click_compose import multi_callback
 
 
-   def validate_positive(ctx, param, value):
+   def validate_positive(
+       _ctx: click.Context,
+       _param: click.Parameter,
+       value: int,
+   ) -> int:
        """Validate that value is positive."""
        if value <= 0:
-           raise click.BadParameter("Must be positive")
+           msg = "Must be positive"
+           raise click.BadParameter(msg)
        return value
 
 
-   def validate_max_100(ctx, param, value):
+   MAX_VALUE = 100
+
+
+   def validate_max_100(
+       _ctx: click.Context,
+       _param: click.Parameter,
+       value: int,
+   ) -> int:
        """Validate that value is at most 100."""
-       if value > 100:
-           raise click.BadParameter("Must be <= 100")
+       if value > MAX_VALUE:
+           msg = "Must be <= 100"
+           raise click.BadParameter(msg)
        return value
 
 
@@ -58,9 +71,13 @@ Combine multiple callbacks into a single callback that applies them in sequence:
        type=int,
        callback=multi_callback([validate_positive, validate_max_100]),
    )
-   def cmd(count):
+   def cmd(count: int) -> None:
        """Example command with multiple validators."""
        click.echo(f"Count: {count}")
+
+
+   if __name__ == "__main__":
+       cmd()
 
 sequence_validator
 ~~~~~~~~~~~~~~~~~~
@@ -76,10 +93,15 @@ Apply a validator to each element in a sequence (useful with ``multiple=True``):
    from click_compose import sequence_validator
 
 
-   def validate_positive(ctx, param, value):
+   def validate_positive(
+       _ctx: click.Context,
+       _param: click.Parameter,
+       value: int,
+   ) -> int:
        """Validate that value is positive."""
        if value <= 0:
-           raise click.BadParameter("Must be positive")
+           msg = "Must be positive"
+           raise click.BadParameter(msg)
        return value
 
 
@@ -90,9 +112,13 @@ Apply a validator to each element in a sequence (useful with ``multiple=True``):
        type=int,
        callback=sequence_validator(validate_positive),
    )
-   def cmd(numbers):
+   def cmd(numbers: tuple[int, ...]) -> None:
        """Example command with sequence validation."""
        click.echo(f"Sum: {sum(numbers)}")
+
+
+   if __name__ == "__main__":
+       cmd()
 
 Documentation
 -------------
