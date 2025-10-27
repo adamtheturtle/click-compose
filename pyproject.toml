@@ -43,6 +43,7 @@ optional-dependencies.dev = [
     "check-manifest==0.51",
     "deptry==0.23.1",
     "doc8==2.0.0",
+    "doccmd==2025.10.27",
     "docformatter==1.7.7",
     "furo==2025.9.25",
     "interrogate==1.7.0",
@@ -201,6 +202,7 @@ disable = [
 
 per-file-ignores = [
     "docs/source/conf.py:invalid-name",
+    "doccmd_*_rst_*.py:invalid-name",
 ]
 
 [tool.pylint.'FORMAT']
@@ -330,6 +332,8 @@ ignore_names = [
     "suppress_warnings",
     "templates_path",
     "warning_is_error",
+    # Example commands in documentation
+    "cmd",
 ]
 
 exclude = [ ".venv" ]

@@ -126,6 +126,13 @@ repos:
         types_or: [python]
         additional_dependencies: [uv==0.6.3]
         stages: [pre-push]
+      - id: interrogate-docs
+        name: interrogate docs
+        entry: uv run --extra=dev doccmd --language=python --command="interrogate"
+        language: python
+        types_or: [markdown, rst]
+        additional_dependencies: [uv==0.6.3]
+        stages: [pre-commit]
       - id: linkcheck
         name: linkcheck
         entry: uv run --extra=dev sphinx-build -W -b linkcheck docs/source/ docs/build/
@@ -141,6 +148,13 @@ repos:
         additional_dependencies: [uv==0.6.3]
         stages: [pre-push]
         require_serial: true
+      - id: mypy-docs
+        name: mypy-docs
+        entry: uv run --extra=dev doccmd --language=python --command="mypy"
+        language: python
+        types_or: [markdown, rst]
+        additional_dependencies: [uv==0.6.3]
+        stages: [pre-push]
       - id: pylint
         name: pylint
         entry: uv run --extra=dev pylint
@@ -149,6 +163,13 @@ repos:
         additional_dependencies: [uv==0.6.3]
         stages: [pre-push]
         require_serial: true
+      - id: pylint-docs
+        name: pylint-docs
+        entry: uv run --extra=dev doccmd --language=python --command="pylint"
+        language: python
+        types_or: [markdown, rst]
+        additional_dependencies: [uv==0.6.3]
+        stages: [manual]
       - id: pyproject-fmt-fix
         name: pyproject-fmt
         entry: uv run --extra=dev pyproject-fmt
@@ -165,6 +186,13 @@ repos:
         additional_dependencies: [uv==0.6.3]
         stages: [pre-push]
         require_serial: true
+      - id: pyright-docs
+        name: pyright-docs
+        entry: uv run --extra=dev doccmd --language=python --command="pyright"
+        language: python
+        types_or: [markdown, rst]
+        additional_dependencies: [uv==0.6.3]
+        stages: [pre-push]
       - id: pyright-verifytypes
         name: pyright --verifytypes
         entry: uv run --extra=dev pyright --verifytypes click_compose --ignoreexternal
@@ -187,6 +215,13 @@ repos:
         additional_dependencies: [uv==0.6.3]
         stages: [pre-commit]
         require_serial: true
+      - id: ruff-check-fix-docs
+        name: ruff check fix docs
+        entry: uv run --extra=dev doccmd --language=python --command="ruff check --fix"
+        language: python
+        types_or: [markdown, rst]
+        additional_dependencies: [uv==0.6.3]
+        stages: [pre-commit]
       - id: ruff-format-fix
         name: ruff format
         entry: uv run --extra=dev ruff format --force-exclude
@@ -195,6 +230,14 @@ repos:
         additional_dependencies: [uv==0.6.3]
         stages: [pre-commit]
         require_serial: true
+      - id: ruff-format-fix-docs
+        name: ruff format docs
+        entry: uv run --extra=dev doccmd --language=python --no-pad-file --command="ruff
+          format"
+        language: python
+        types_or: [markdown, rst]
+        additional_dependencies: [uv==0.6.3]
+        stages: [pre-commit]
       - id: shellcheck
         name: shellcheck
         entry: uv run --extra=dev shellcheck
@@ -202,11 +245,27 @@ repos:
         types: [shell]
         additional_dependencies: [uv==0.6.3]
         stages: [pre-commit]
+      - id: shellcheck-docs
+        name: shellcheck-docs
+        entry: uv run --extra=dev doccmd --language=shell --language=console --command="shellcheck
+          --shell=bash"
+        language: python
+        types_or: [markdown, rst]
+        additional_dependencies: [uv==0.6.3]
+        stages: [pre-commit]
       - id: shfmt
         name: shfmt
         entry: uv run --extra=dev shfmt -w -s -i 4
         language: python
         types: [shell]
+        additional_dependencies: [uv==0.6.3]
+        stages: [pre-commit]
+      - id: shfmt-docs
+        name: shfmt-docs
+        entry: uv run --extra=dev doccmd --language=shell --language=console --skip-marker=shfmt
+          --no-pad-file --command="shfmt --write --space-redirects --indent=4"
+        language: python
+        types_or: [markdown, rst]
         additional_dependencies: [uv==0.6.3]
         stages: [pre-commit]
       - id: spelling
@@ -230,6 +289,13 @@ repos:
         pass_filenames: false
         additional_dependencies: [uv==0.6.3]
         stages: [pre-push]
+      - id: vulture-docs
+        name: vulture docs
+        entry: uv run --extra=dev doccmd --language=python --command="vulture"
+        language: python
+        types_or: [markdown, rst]
+        additional_dependencies: [uv==0.6.3]
+        stages: [pre-commit]
       - id: yamlfix
         name: yamlfix
         entry: uv run --extra=dev yamlfix

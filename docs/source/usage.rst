@@ -11,16 +11,47 @@ This is useful when you want to apply multiple transformations or validators to 
 
 .. code-block:: python
 
+   """Example of using multi_callback."""
+
+   import click
+
    from click_compose import multi_callback
+
+
+   def validator1(
+       _ctx: click.Context, _param: click.Parameter, value: int
+   ) -> int:
+       """First validator."""
+       return value
+
+
+   def validator2(
+       _ctx: click.Context, _param: click.Parameter, value: int
+   ) -> int:
+       """Second validator."""
+       return value
+
+
+   def transformer(
+       _ctx: click.Context, _param: click.Parameter, value: int
+   ) -> int:
+       """Transform the value."""
+       return value
+
 
    @click.command()
    @click.option(
        "--value",
        type=int,
-       callback=multi_callback([validator1, validator2, transformer]),
+       callback=multi_callback(callbacks=[validator1, validator2, transformer]),
    )
-   def cmd(value):
-       click.echo(value)
+   def cmd(value: int) -> None:
+       """Example command using multi_callback."""
+       click.echo(message=value)
+
+
+   if __name__ == "__main__":
+       cmd([])
 
 The value is passed through each callback in order, with the output of one callback becoming the input to the next.
 
@@ -32,16 +63,29 @@ This is particularly useful with Click's ``multiple=True`` option parameter.
 
 .. code-block:: python
 
+   """Example of using sequence_validator."""
+
+   import click
+
    from click_compose import sequence_validator
+
+
+   def validate_single_value(
+       _ctx: click.Context | None, _param: click.Parameter | None, value: int
+   ) -> int:
+       """Validate a single value."""
+       return value
+
 
    @click.command()
    @click.option(
        "--values",
        multiple=True,
        type=int,
-       callback=sequence_validator(validate_single_value),
+       callback=sequence_validator(validator=validate_single_value),
    )
-   def cmd(values):
-       click.echo(values)
+   def cmd(values: tuple[int, ...]) -> None:
+       """Example command using sequence_validator."""
+       click.echo(message=values)
 
 Each element in the sequence is validated individually, and validation errors are raised for the specific element that fails.
