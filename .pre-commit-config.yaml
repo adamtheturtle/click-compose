@@ -218,7 +218,7 @@ repos:
         stages: [pre-push]
       - id: sphinx-lint
         name: sphinx-lint
-        entry: uv run --extra=dev sphinx-lint --enable all
+        entry: uv run --extra=dev sphinx-lint --enable all --max-line-length 200
         language: python
         types: [rst]
         additional_dependencies: [uv==0.6.3]
