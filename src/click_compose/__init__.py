@@ -50,6 +50,22 @@ def sequence_validator(
 
 
 @beartype
+def deduplicate(
+    ctx: click.Context | None,
+    param: click.Parameter | None,
+    sequence: Sequence[T],
+) -> Sequence[T]:
+    """
+    Return the sequence with duplicates removed while preserving order.
+    """
+    # We "use" the parameters to silence unused-argument tooling.
+    del ctx
+    del param
+
+    return tuple(dict.fromkeys(sequence).keys())
+
+
+@beartype
 def multi_callback(
     *,
     callbacks: Sequence[Callable[..., T]],
