@@ -22,7 +22,7 @@ Or with ``uv``:
 Quick Start
 -----------
 
-``click-compose`` provides two main utilities for composing Click callbacks:
+``click-compose`` provides utilities for composing Click callbacks:
 
 multi_callback
 ~~~~~~~~~~~~~~
@@ -111,6 +111,31 @@ Apply a validator to each element in a sequence (useful with ``multiple=True``):
    def cmd(numbers: tuple[int, ...]) -> None:
        """Example command with sequence validation."""
        click.echo(message=f"Sum: {sum(numbers)}")
+
+deduplicate
+~~~~~~~~~~~
+
+Remove duplicates from a sequence while preserving order (useful with ``multiple=True``):
+
+.. code-block:: python
+
+   """Example of using ``deduplicate`` to remove duplicate values."""
+
+   import click
+
+   from click_compose import deduplicate
+
+
+   @click.command()
+   @click.option(
+       "--tags",
+       multiple=True,
+       type=str,
+       callback=deduplicate,
+   )
+   def cmd(tags: tuple[str, ...]) -> None:
+       """Example command that removes duplicate tags."""
+       click.echo(message=f"Unique tags: {', '.join(tags)}")
 
 Documentation
 -------------
