@@ -119,7 +119,7 @@ Remove duplicates from a sequence while preserving order (useful with ``multiple
 
 .. code-block:: python
 
-   """Example of using deduplicate to remove duplicate values."""
+   """Example of using ``deduplicate`` to remove duplicate values."""
 
    import click
 

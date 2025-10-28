@@ -98,7 +98,7 @@ This is particularly useful with Click's ``multiple=True`` option parameter when
 
 .. code-block:: python
 
-   """Example of using deduplicate."""
+   """Example of using ``deduplicate``."""
 
    import click
 
@@ -113,7 +113,7 @@ This is particularly useful with Click's ``multiple=True`` option parameter when
        callback=deduplicate,
    )
    def cmd(tags: tuple[str, ...]) -> None:
-       """Example command using deduplicate."""
+       """Example command using ``deduplicate``."""
        click.echo(message=f"Unique tags: {', '.join(tags)}")
 
 
