@@ -89,3 +89,36 @@ This is particularly useful with Click's ``multiple=True`` option parameter.
        click.echo(message=values)
 
 Each element in the sequence is validated individually, and validation errors are raised for the specific element that fails.
+
+``deduplicate``
+---------------
+
+``deduplicate`` is a Click callback that removes duplicate values from a sequence while preserving the original order.
+This is particularly useful with Click's ``multiple=True`` option parameter when you want to ensure unique values.
+
+.. code-block:: python
+
+   """Example of using deduplicate."""
+
+   import click
+
+   from click_compose import deduplicate
+
+
+   @click.command()
+   @click.option(
+       "--tags",
+       multiple=True,
+       type=str,
+       callback=deduplicate,
+   )
+   def cmd(tags: tuple[str, ...]) -> None:
+       """Example command using deduplicate."""
+       click.echo(message=f"Unique tags: {', '.join(tags)}")
+
+
+   if __name__ == "__main__":
+       cmd([])
+
+The callback preserves the first occurrence of each value and removes subsequent duplicates.
+For example, if a user provides ``--tags foo --tags bar --tags foo``, the result will be ``('foo', 'bar')``.
