@@ -50,7 +50,7 @@ optional-dependencies.dev = [
     "mypy[faster-cache]==1.18.2",
     "mypy-strict-kwargs==2025.4.3",
     "packaging>=24.0",
-    "pre-commit==4.3.0",
+    "pre-commit==4.4.0",
     "pydocstyle==6.3",
     "pygments==2.19.2",
     "pylint[spelling]==4.0.2",
