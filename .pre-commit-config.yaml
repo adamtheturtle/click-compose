@@ -199,7 +199,7 @@ repos:
         stages: [pre-push]
       - id: pyright-verifytypes
         name: pyright --verifytypes
-        entry: uv run --extra=dev pyright --verifytypes click_compose --ignoreexternal
+        entry: uv run --extra=dev pyright --verifytypes click_compose
         language: python
         pass_filenames: false
         additional_dependencies: [uv==0.9.5]
