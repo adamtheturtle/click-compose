@@ -216,29 +216,18 @@ def test_sequence_validator_none_value() -> None:
     This occurs when an optional parameter is not provided.
     """
 
-    def double(
-        ctx: click.Context | None,
-        param: click.Parameter | None,
-        value: int,
-    ) -> int:
-        """
-        Double the value.
-        """
-        del ctx, param
-        return value * 2
-
     @click.command()
     @click.option(
-        "--nums",
+        "--num",
         type=int,
         default=None,
-        callback=sequence_validator(validator=double),
+        callback=sequence_validator(validator=lambda _c, _p, v: v),
     )
-    def cmd(nums: int | None) -> None:
+    def cmd(num: int | None) -> None:
         """
         Test command.
         """
-        click.echo(message=f"Value: {nums}")
+        click.echo(message=f"Value: {num}")
 
     runner = CliRunner()
     result = runner.invoke(cli=cmd, args=[])
