@@ -67,3 +67,23 @@ def test_deduplicate_returns_tuple() -> None:
     result = deduplicate(ctx=None, param=None, sequence=values)
     assert isinstance(result, tuple)
     assert result == ("alpha", "beta")
+
+
+def test_deduplicate_none_value() -> None:
+    """A None value is passed through unchanged.
+
+    This occurs when an optional parameter is not provided.
+    """
+
+    @click.command()
+    @click.option("--item", default=None, callback=deduplicate)
+    def cmd(item: str | None) -> None:
+        """
+        Report the value received.
+        """
+        click.echo(message=f"Value: {item}")
+
+    runner = CliRunner()
+    result = runner.invoke(cli=cmd, args=[])
+    assert result.exit_code == 0
+    assert "Value: None" in result.output

@@ -208,3 +208,28 @@ def test_sequence_validator_preserves_order() -> None:
     )
     assert result.exit_code == 0
     assert result.output.strip() == "5,2,8,1"
+
+
+def test_sequence_validator_none_value() -> None:
+    """A None value is passed through unchanged.
+
+    This occurs when an optional parameter is not provided.
+    """
+
+    @click.command()
+    @click.option(
+        "--num",
+        type=int,
+        default=None,
+        callback=sequence_validator(validator=lambda _c, _p, v: v),
+    )
+    def cmd(num: int | None) -> None:
+        """
+        Test command.
+        """
+        click.echo(message=f"Value: {num}")
+
+    runner = CliRunner()
+    result = runner.invoke(cli=cmd, args=[])
+    assert result.exit_code == 0
+    assert "Value: None" in result.output

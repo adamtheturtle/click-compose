@@ -17,7 +17,8 @@ def sequence_validator(
     *,
     validator: Callable[[click.Context | None, click.Parameter | None, T], U],
 ) -> Callable[
-    [click.Context | None, click.Parameter | None, Sequence[T]], Sequence[U]
+    [click.Context | None, click.Parameter | None, Sequence[T] | None],
+    Sequence[U] | None,
 ]:
     """Wrap a single-value validator to apply it to a sequence of values.
 
@@ -35,11 +36,13 @@ def sequence_validator(
     def callback(
         ctx: click.Context | None,
         param: click.Parameter | None,
-        value: Sequence[T],
-    ) -> Sequence[U]:
+        value: Sequence[T] | None,
+    ) -> Sequence[U] | None:
         """
         Apply the validator to each element in the sequence.
         """
+        if value is None:
+            return None
         return_values: tuple[U, ...] = ()
         for item in value:
             returned_value = validator(ctx, param, item)
@@ -53,14 +56,17 @@ def sequence_validator(
 def deduplicate(
     ctx: click.Context | None,
     param: click.Parameter | None,
-    sequence: Sequence[T],
-) -> Sequence[T]:
+    sequence: Sequence[T] | None,
+) -> Sequence[T] | None:
     """
     Return the sequence with duplicates removed while preserving order.
     """
     # We "use" the parameters to silence unused-argument tooling.
     del ctx
     del param
+
+    if sequence is None:
+        return None
 
     return tuple(dict.fromkeys(sequence).keys())
 
