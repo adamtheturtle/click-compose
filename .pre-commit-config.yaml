@@ -10,20 +10,31 @@ ci:
     - docformatter
     - docs
     - interrogate
+    - interrogate-docs
     - linkcheck
     - mypy
+    - mypy-docs
     - pylint
+    - pylint-docs
     - pyproject-fmt-fix
     - pyright
+    - pyright-docs
     - pyright-verifytypes
     - pyroma
     - ruff-check-fix
+    - ruff-check-fix-docs
     - ruff-format-fix
+    - ruff-format-fix-docs
     - shellcheck
+    - shellcheck-docs
     - shfmt
+    - shfmt-docs
     - spelling
     - sphinx-lint
+    - ty
+    - ty-docs
     - vulture
+    - vulture-docs
     - yamlfix
 
 default_install_hook_types: [pre-commit, pre-push, commit-msg]
@@ -202,6 +213,22 @@ repos:
         entry: uv run --extra=dev pyright --verifytypes click_compose
         language: python
         pass_filenames: false
+        additional_dependencies: [uv==0.9.5]
+        stages: [pre-push]
+      - id: ty
+        name: ty
+        entry: uv run --extra=dev ty check
+        language: python
+        types_or: [python, toml]
+        pass_filenames: false
+        additional_dependencies: [uv==0.9.5]
+        stages: [pre-push]
+      - id: ty-docs
+        name: ty-docs
+        entry: uv run --extra=dev doccmd --no-write-to-file --example-workers 0 --language=python
+          --command="ty check"
+        language: python
+        types_or: [markdown, rst]
         additional_dependencies: [uv==0.9.5]
         stages: [pre-push]
       - id: pyroma
