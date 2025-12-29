@@ -240,6 +240,7 @@ ignore = [
     "spelling_private_dict.txt",
     "tests",
     "tests/**",
+    "zizmor.yml",
 ]
 
 [tool.deptry]
