@@ -1,6 +1,4 @@
-"""
-Tests for ``deduplicate`` helper.
-"""
+"""Tests for ``deduplicate`` helper."""
 
 import click
 from click.testing import CliRunner
@@ -10,15 +8,14 @@ from click_compose import deduplicate
 
 def test_deduplicate_removes_duplicates() -> None:
     """
-    Duplicate values are removed while preserving the original order.
+    Duplicate values are removed while preserving the original
+    order.
     """
 
     @click.command()
     @click.option("--item", multiple=True, callback=deduplicate)
     def cmd(item: tuple[str, ...]) -> None:
-        """
-        Echo the unique items.
-        """
+        """Echo the unique items."""
         for value in item:
             click.echo(message=value)
 
@@ -41,16 +38,12 @@ def test_deduplicate_removes_duplicates() -> None:
 
 
 def test_deduplicate_empty_sequence() -> None:
-    """
-    An empty sequence is returned unchanged.
-    """
+    """An empty sequence is returned unchanged."""
 
     @click.command()
     @click.option("--item", multiple=True, callback=deduplicate)
     def cmd(item: tuple[str, ...]) -> None:
-        """
-        Report the number of values received.
-        """
+        """Report the number of values received."""
         click.echo(message=f"Count: {len(item)}")
 
     runner = CliRunner()
@@ -60,9 +53,7 @@ def test_deduplicate_empty_sequence() -> None:
 
 
 def test_deduplicate_returns_tuple() -> None:
-    """
-    The helper always returns a tuple even when given a list.
-    """
+    """The helper always returns a tuple even when given a list."""
     values = ["alpha", "alpha", "beta"]
     result = deduplicate(ctx=None, param=None, sequence=values)
     assert isinstance(result, tuple)
@@ -78,9 +69,7 @@ def test_deduplicate_none_value() -> None:
     @click.command()
     @click.option("--item", default=None, callback=deduplicate)
     def cmd(item: str | None) -> None:
-        """
-        Report the value received.
-        """
+        """Report the value received."""
         click.echo(message=f"Value: {item}")
 
     runner = CliRunner()
