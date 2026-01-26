@@ -167,7 +167,8 @@ repos:
 
       - id: interrogate-docs
         name: interrogate docs
-        entry: uv run --extra=dev doccmd --no-write-to-file --language=python --command="interrogate"
+        entry: uv run --extra=dev doccmd --no-write-to-file --example-workers 0 --language=python
+          --command="interrogate"
         language: python
         types_or: [markdown, rst]
         additional_dependencies: [uv==0.9.5]
@@ -209,7 +210,8 @@ repos:
 
       - id: pylint-docs
         name: pylint-docs
-        entry: uv run --extra=dev doccmd --no-write-to-file --language=python --command="pylint"
+        entry: uv run --extra=dev doccmd --no-write-to-file --example-workers 0 --language=python
+          --command="pylint"
         language: python
         types_or: [markdown, rst]
         additional_dependencies: [uv==0.9.5]
@@ -235,7 +237,8 @@ repos:
 
       - id: pyright-docs
         name: pyright-docs
-        entry: uv run --extra=dev doccmd --no-write-to-file --language=python --command="pyright"
+        entry: uv run --extra=dev doccmd --no-write-to-file --example-workers 0 --language=python
+          --command="pyright"
         language: python
         types_or: [markdown, rst]
         additional_dependencies: [uv==0.9.5]
@@ -260,8 +263,8 @@ repos:
 
       - id: ty-docs
         name: ty-docs
-        entry: uv run --extra=dev doccmd --no-write-to-file --language=python --command="ty
-          check"
+        entry: uv run --extra=dev doccmd --no-write-to-file --example-workers 0 --language=python
+          --command="ty check"
         language: python
         types_or: [markdown, rst]
         additional_dependencies: [uv==0.9.5]
@@ -278,8 +281,8 @@ repos:
 
       - id: pyrefly-docs
         name: pyrefly-docs
-        entry: uv run --extra=dev doccmd --no-write-to-file --language=python --command="pyrefly
-          check"
+        entry: uv run --extra=dev doccmd --no-write-to-file --example-workers 0 --language=python
+          --command="pyrefly check"
         language: python
         types_or: [markdown, rst]
         additional_dependencies: [uv==0.9.5]
@@ -338,8 +341,8 @@ repos:
 
       - id: shellcheck-docs
         name: shellcheck-docs
-        entry: uv run --extra=dev doccmd --no-write-to-file --language=shell --language=console
-          --command="shellcheck --shell=bash"
+        entry: uv run --extra=dev doccmd --no-write-to-file --example-workers 0 --language=shell
+          --language=console --command="shellcheck --shell=bash"
         language: python
         types_or: [markdown, rst]
         additional_dependencies: [uv==0.9.5]
@@ -388,7 +391,8 @@ repos:
 
       - id: vulture-docs
         name: vulture docs
-        entry: uv run --extra=dev doccmd --no-write-to-file --language=python --command="vulture"
+        entry: uv run --extra=dev doccmd --no-write-to-file --example-workers 0 --language=python
+          --command="vulture"
         language: python
         types_or: [markdown, rst]
         additional_dependencies: [uv==0.9.5]
