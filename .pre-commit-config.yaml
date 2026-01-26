@@ -191,6 +191,7 @@ repos:
         stages: [pre-push]
         require_serial: true
 
+      # We do not use --example-workers 0 due to https://github.com/python/mypy/issues/18283
       - id: mypy-docs
         name: mypy-docs
         entry: uv run --extra=dev doccmd --no-write-to-file --language=python --command="mypy"
