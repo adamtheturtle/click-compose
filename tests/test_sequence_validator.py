@@ -1,6 +1,4 @@
-"""
-Tests for sequence_validator functionality.
-"""
+"""Tests for sequence_validator functionality."""
 
 import click
 from click.testing import CliRunner
@@ -9,18 +7,14 @@ from click_compose import sequence_validator
 
 
 def test_sequence_validator_basic() -> None:
-    """
-    A validator is applied to each element in a sequence.
-    """
+    """A validator is applied to each element in a sequence."""
 
     def double(
         ctx: click.Context | None,
         param: click.Parameter | None,
         value: int,
     ) -> int:
-        """
-        Double the value.
-        """
+        """Double the value."""
         del ctx, param
         return value * 2
 
@@ -32,9 +26,7 @@ def test_sequence_validator_basic() -> None:
         callback=sequence_validator(validator=double),
     )
     def cmd(nums: tuple[int, ...]) -> None:
-        """
-        Test command.
-        """
+        """Test command."""
         for num in nums:
             click.echo(message=num)
 
@@ -47,18 +39,14 @@ def test_sequence_validator_basic() -> None:
 
 
 def test_sequence_validator_with_validation() -> None:
-    """
-    Validation errors are raised for individual elements.
-    """
+    """Validation errors are raised for individual elements."""
 
     def validate_positive(
         ctx: click.Context | None,
         param: click.Parameter | None,
         value: int,
     ) -> int:
-        """
-        Validate that value is positive.
-        """
+        """Validate that value is positive."""
         del ctx, param
         if value <= 0:
             msg = "Must be positive"
@@ -73,9 +61,7 @@ def test_sequence_validator_with_validation() -> None:
         callback=sequence_validator(validator=validate_positive),
     )
     def cmd(nums: tuple[int, ...]) -> None:
-        """
-        Test command.
-        """
+        """Test command."""
         for num in nums:
             click.echo(message=num)
 
@@ -97,18 +83,14 @@ def test_sequence_validator_with_validation() -> None:
 
 
 def test_sequence_validator_empty_sequence() -> None:
-    """
-    An empty sequence is handled correctly.
-    """
+    """An empty sequence is handled correctly."""
 
     def double(
         ctx: click.Context | None,
         param: click.Parameter | None,
         value: int,
     ) -> int:
-        """
-        Double the value.
-        """
+        """Double the value."""
         del ctx, param
         return value * 2
 
@@ -120,9 +102,7 @@ def test_sequence_validator_empty_sequence() -> None:
         callback=sequence_validator(validator=double),
     )
     def cmd(nums: tuple[int, ...]) -> None:
-        """
-        Test command.
-        """
+        """Test command."""
         click.echo(message=f"Count: {len(nums)}")
 
     runner = CliRunner()
@@ -137,18 +117,14 @@ def test_sequence_validator_empty_sequence() -> None:
 
 
 def test_sequence_validator_with_type_conversion() -> None:
-    """
-    Validators can convert types for each element.
-    """
+    """Validators can convert types for each element."""
 
     def to_string(
         ctx: click.Context | None,
         param: click.Parameter | None,
         value: int,
     ) -> str:
-        """
-        Convert value to string.
-        """
+        """Convert value to string."""
         del ctx, param
         return f"Number: {value}"
 
@@ -160,9 +136,7 @@ def test_sequence_validator_with_type_conversion() -> None:
         callback=sequence_validator(validator=to_string),
     )
     def cmd(nums: tuple[str, ...]) -> None:
-        """
-        Test command.
-        """
+        """Test command."""
         for num in nums:
             click.echo(message=num)
 
@@ -173,18 +147,14 @@ def test_sequence_validator_with_type_conversion() -> None:
 
 
 def test_sequence_validator_preserves_order() -> None:
-    """
-    The order of elements is preserved.
-    """
+    """The order of elements is preserved."""
 
     def identity(
         ctx: click.Context | None,
         param: click.Parameter | None,
         value: int,
     ) -> int:
-        """
-        Return value unchanged.
-        """
+        """Return value unchanged."""
         del ctx, param
         return value
 
@@ -196,9 +166,7 @@ def test_sequence_validator_preserves_order() -> None:
         callback=sequence_validator(validator=identity),
     )
     def cmd(nums: tuple[int, ...]) -> None:
-        """
-        Test command.
-        """
+        """Test command."""
         click.echo(message=",".join(str(object=n) for n in nums))
 
     runner = CliRunner()
@@ -224,9 +192,7 @@ def test_sequence_validator_none_value() -> None:
         callback=sequence_validator(validator=lambda _c, _p, v: v),
     )
     def cmd(num: int | None) -> None:
-        """
-        Test command.
-        """
+        """Test command."""
         click.echo(message=f"Value: {num}")
 
     runner = CliRunner()

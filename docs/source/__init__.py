@@ -1,3 +1,1 @@
-"""
-Documentation for click-compose.
-"""
+"""Documentation for click-compose."""

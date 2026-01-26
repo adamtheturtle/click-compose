@@ -1,3 +1,1 @@
-"""
-Tests for click-compose.
-"""
+"""Tests for click-compose."""
