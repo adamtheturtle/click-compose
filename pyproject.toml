@@ -290,12 +290,11 @@ enableTypeIgnoreComments = false
 reportUnnecessaryTypeIgnoreComment = true
 typeCheckingMode = "strict"
 
-[tool.ty.rules]
-unused-ignore-comment = "error"
-
 [tool.ty.analysis]
-# Disable support for `type: ignore` comments
 respect-type-ignore-comments = false
+
+[tool.ty.terminal]
+error-on-warning = true
 
 [tool.pydocstringformatter]
 write = true
