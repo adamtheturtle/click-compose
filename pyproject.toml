@@ -84,14 +84,14 @@ urls.Source = "https://github.com/adamtheturtle/click-compose"
 [tool.setuptools]
 zip-safe = false
 
-[tool.setuptools.packages.find]
-where = [
-    "src",
-]
-
 [tool.setuptools.package-data]
 click_compose = [
     "py.typed",
+]
+
+[tool.setuptools.packages.find]
+where = [
+    "src",
 ]
 
 [tool.distutils.bdist_wheel]
@@ -149,6 +149,10 @@ lint.unfixable = [
 lint.pydocstyle.convention = "google"
 
 [tool.pylint]
+
+[tool.pylint.'FORMAT']
+
+single-line-if-stmt = false
 
 [tool.pylint.'MASTER']
 
@@ -217,10 +221,6 @@ per-file-ignores = [
     "doccmd_*_rst_*.py:invalid-name",
 ]
 
-[tool.pylint.'FORMAT']
-
-single-line-if-stmt = false
-
 [tool.pylint.'SPELLING']
 
 spelling-dict = 'en_US'
@@ -265,14 +265,14 @@ max_supported_python = "3.14"
 xfail_strict = true
 log_cli = true
 
-[tool.coverage.run]
-
-branch = true
-
 [tool.coverage.report]
 exclude_also = [
     "if TYPE_CHECKING:",
 ]
+
+[tool.coverage.run]
+
+branch = true
 
 [tool.mypy]
 
