@@ -19,7 +19,6 @@ jobs:
       matrix:
         python-version: ['3.10', '3.11', '3.12', '3.13', '3.14']
         platform: [ubuntu-latest]
-        lint-stage: [pre-commit, pre-push, manual]
 
     runs-on: ${{ matrix.platform }}
 
@@ -36,22 +35,47 @@ jobs:
           enable-cache: true
           cache-dependency-glob: '**/pyproject.toml'
 
-      - name: Run lint
-        run: |
-          uv run --extra=dev --python=${{ matrix.python-version }} prek run --all-files --hook-stage ${{ matrix.lint-stage }} --verbose
-
       - name: Run tests
         run: |
           uv run --extra=dev --python=${{ matrix.python-version }} pytest -s -vvv --cov-fail-under 100 --cov=src/ --cov=tests/ tests/
 
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+          fetch-tags: true
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          enable-cache: true
+          cache-dependency-glob: '**/pyproject.toml'
+
+      - name: Run lint
+        # Use bash to ensure the step fails if any command fails.
+        # PowerShell does not fail on intermediate command failures by default.
+        shell: bash
+        run: |
+          uv run --extra=dev prek run --all-files --hook-stage pre-commit --verbose
+          uv run --extra=dev prek run --all-files --hook-stage pre-push --verbose
+          uv run --extra=dev prek run --all-files --hook-stage manual --verbose
+        env:
+          UV_PYTHON: '3.13'
+
+      - uses: pre-commit-ci/lite-action@v1.1.0
+        if: always()
+
   completion-ci:
-    needs: build
+    needs: [build, lint]
     runs-on: ubuntu-latest
     if: always()  # Run even if one matrix job fails
     steps:
       - name: Check matrix job status
         run: |-
-          if ! ${{ needs.build.result == 'success' }}; then
-            echo "One or more matrix jobs failed"
+          if ! ${{ needs.build.result == 'success' }} || ! ${{ needs.lint.result == 'success' }}; then
+            echo "One or more jobs failed"
             exit 1
           fi
