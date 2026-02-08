@@ -56,7 +56,7 @@ optional-dependencies.dev = [
     "pygments==2.19.2",
     "pylint[spelling]==4.0.4",
     "pylint-per-file-ignores==3.2.0",
-    "pyproject-fmt==2.12.1",
+    "pyproject-fmt==2.14.0",
     "pyrefly==0.51.1",
     "pyright==1.1.408",
     "pyroma==5.0.1",
@@ -83,63 +83,54 @@ urls.Source = "https://github.com/adamtheturtle/click-compose"
 
 [tool.setuptools]
 zip-safe = false
-
-[tool.setuptools.package-data]
-click_compose = [
+package-data.click_compose = [
     "py.typed",
 ]
-
-[tool.setuptools.packages.find]
-where = [
+packages.find.where = [
     "src",
 ]
 
-[tool.distutils.bdist_wheel]
-universal = true
+[tool.distutils]
+bdist_wheel.universal = true
 
 [tool.setuptools_scm]
 version_scheme = "post-release"
 
 [tool.ruff]
 line-length = 79
-
 lint.select = [
     "ALL",
 ]
 lint.ignore = [
-    # Ruff warns that this conflicts with the formatter.
-    "COM812",
     # Allow our chosen docstring line-style - pydocstringformatter handles formatting
     # but doesn't enforce D205 (blank line after summary) or D212 (summary on first line).
     "D205",
-    "D212",
-    # Ruff warns that this conflicts with the formatter.
-    "ISC001",
-    # Ignore "too-many-*" errors as they seem to get in the way more than
+    # Ignore 'too-many-*' errors as they seem to get in the way more than
     # helping.
     "PLR0913",
+    # Ruff warns that this conflicts with the formatter.
+    "COM812",
+    # Ruff warns that this conflicts with the formatter.
+    "ISC001",
     # We use asserts for type narrowing.
     "S101",
+    "D212",
 ]
-
 lint.per-file-ignores."doccmd_*.py" = [
+    # Allow asserts in docs.
+    "S101",
     # Allow our chosen docstring line-style - pydocstringformatter handles
     # formatting but docstrings in docs may not match this style.
     "D200",
-    # Allow asserts in docs.
-    "S101",
 ]
-
 lint.per-file-ignores."docs/source/*.py" = [
     # Allow asserts in docs.
     "S101",
 ]
-
 lint.per-file-ignores."tests/*.py" = [
     # Allow asserts in tests.
     "S101",
 ]
-
 # Do not automatically remove commented out code.
 # We comment out code during development, and with VSCode auto-save, this code
 # is sometimes annoyingly removed.
@@ -149,86 +140,69 @@ lint.unfixable = [
 lint.pydocstyle.convention = "google"
 
 [tool.pylint]
-
-[tool.pylint.'FORMAT']
-
-single-line-if-stmt = false
-
-[tool.pylint.'MASTER']
-
-persistent = true
-jobs = 0
-
-load-plugins = [
+"FORMAT".single-line-if-stmt = false
+"MASTER".persistent = true
+"MASTER".jobs = 0
+"MASTER".load-plugins = [
     "pylint_per_file_ignores",
-    'pylint.extensions.bad_builtin',
-    'pylint.extensions.comparison_placement',
-    'pylint.extensions.consider_refactoring_into_while_condition',
-    'pylint.extensions.docparams',
-    'pylint.extensions.dunder',
-    'pylint.extensions.eq_without_hash',
-    'pylint.extensions.for_any_all',
-    'pylint.extensions.mccabe',
-    'pylint.extensions.no_self_use',
-    'pylint.extensions.overlapping_exceptions',
-    'pylint.extensions.private_import',
-    'pylint.extensions.redefined_loop_name',
-    'pylint.extensions.redefined_variable_type',
-    'pylint.extensions.set_membership',
-    'pylint.extensions.typing',
+    "pylint.extensions.bad_builtin",
+    "pylint.extensions.comparison_placement",
+    "pylint.extensions.consider_refactoring_into_while_condition",
+    "pylint.extensions.docparams",
+    "pylint.extensions.dunder",
+    "pylint.extensions.eq_without_hash",
+    "pylint.extensions.for_any_all",
+    "pylint.extensions.mccabe",
+    "pylint.extensions.no_self_use",
+    "pylint.extensions.overlapping_exceptions",
+    "pylint.extensions.private_import",
+    "pylint.extensions.redefined_loop_name",
+    "pylint.extensions.redefined_variable_type",
+    "pylint.extensions.set_membership",
+    "pylint.extensions.typing",
 ]
-
-unsafe-load-any-extension = false
-
-[tool.pylint.'MESSAGES CONTROL']
-
-enable = [
-    'bad-inline-option',
-    'deprecated-pragma',
-    'file-ignored',
-    'spelling',
-    'use-symbolic-message-instead',
-    'useless-suppression',
+"MASTER".unsafe-load-any-extension = false
+"MESSAGES CONTROL".enable = [
+    "bad-inline-option",
+    "deprecated-pragma",
+    "file-ignored",
+    "spelling",
+    "use-symbolic-message-instead",
+    "useless-suppression",
 ]
-
-disable = [
-    'too-few-public-methods',
-    'too-many-locals',
-    'too-many-arguments',
-    'too-many-instance-attributes',
-    'too-many-return-statements',
-    'too-many-lines',
-    'locally-disabled',
+"MESSAGES CONTROL".disable = [
+    "too-few-public-methods",
+    "too-many-locals",
+    "too-many-arguments",
+    "too-many-instance-attributes",
+    "too-many-return-statements",
+    "too-many-lines",
+    "locally-disabled",
     # Let ruff handle long lines
-    'line-too-long',
+    "line-too-long",
     # Let ruff handle unused imports
-    'unused-import',
+    "unused-import",
     # Let ruff deal with sorting
-    'ungrouped-imports',
+    "ungrouped-imports",
     # We don't need everything to be documented because of mypy
-    'missing-type-doc',
-    'missing-return-type-doc',
+    "missing-type-doc",
+    "missing-return-type-doc",
     # Too difficult to please
-    'duplicate-code',
+    "duplicate-code",
     # Let ruff handle imports
-    'wrong-import-order',
+    "wrong-import-order",
     # mypy does not want untyped parameters.
-    'useless-type-doc',
+    "useless-type-doc",
 ]
-
-per-file-ignores = [
+"MESSAGES CONTROL".per-file-ignores = [
     "docs/source/conf.py:invalid-name",
     "doccmd_*_rst_*.py:invalid-name",
 ]
-
-[tool.pylint.'SPELLING']
-
-spelling-dict = 'en_US'
-spelling-private-dict-file = 'spelling_private_dict.txt'
-spelling-store-unknown-words = 'no'
+"SPELLING".spelling-dict = "en_US"
+"SPELLING".spelling-private-dict-file = "spelling_private_dict.txt"
+"SPELLING".spelling-store-unknown-words = "no"
 
 [tool.check-manifest]
-
 ignore = [
     ".vscode",
     ".vscode/**",
@@ -260,22 +234,17 @@ indent = 4
 keep_full_version = true
 max_supported_python = "3.14"
 
-[tool.pytest.ini_options]
+[tool.pytest]
+ini_options.xfail_strict = true
+ini_options.log_cli = true
 
-xfail_strict = true
-log_cli = true
-
-[tool.coverage.report]
-exclude_also = [
+[tool.coverage]
+report.exclude_also = [
     "if TYPE_CHECKING:",
 ]
-
-[tool.coverage.run]
-
-branch = true
+run.branch = true
 
 [tool.mypy]
-
 strict = true
 files = [ "." ]
 exclude = [ "build" ]
@@ -285,16 +254,13 @@ plugins = [
 ]
 
 [tool.pyright]
-
 enableTypeIgnoreComments = false
 reportUnnecessaryTypeIgnoreComment = true
 typeCheckingMode = "strict"
 
-[tool.ty.analysis]
-respect-type-ignore-comments = false
-
-[tool.ty.terminal]
-error-on-warning = true
+[tool.ty]
+analysis.respect-type-ignore-comments = false
+terminal.error-on-warning = true
 
 [tool.pydocstringformatter]
 write = true
@@ -308,7 +274,6 @@ omit-covered-files = true
 verbose = 2
 
 [tool.doc8]
-
 max_line_length = 2000
 ignore_path = [
     "./.eggs",
@@ -357,7 +322,6 @@ ignore_names = [
     # Example commands in documentation
     "cmd",
 ]
-
 exclude = [ ".venv" ]
 
 [tool.yamlfix]
