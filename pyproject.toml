@@ -243,8 +243,8 @@ run.branch = true
 report.exclude_also = [
     "if TYPE_CHECKING:",
 ]
-
 report.show_missing = true
+
 [tool.mypy]
 strict = true
 files = [ "." ]
