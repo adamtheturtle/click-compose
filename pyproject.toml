@@ -139,10 +139,10 @@ lint.unfixable = [
 lint.pydocstyle.convention = "google"
 
 [tool.pylint]
-"FORMAT".single-line-if-stmt = false
-"MASTER".persistent = true
-"MASTER".jobs = 0
-"MASTER".load-plugins = [
+FORMAT.single-line-if-stmt = false
+MASTER.persistent = true
+MASTER.jobs = 0
+MASTER.load-plugins = [
     "pylint_per_file_ignores",
     "pylint.extensions.bad_builtin",
     "pylint.extensions.comparison_placement",
@@ -160,7 +160,7 @@ lint.pydocstyle.convention = "google"
     "pylint.extensions.set_membership",
     "pylint.extensions.typing",
 ]
-"MASTER".unsafe-load-any-extension = false
+MASTER.unsafe-load-any-extension = false
 "MESSAGES CONTROL".enable = [
     "bad-inline-option",
     "deprecated-pragma",
@@ -197,9 +197,9 @@ lint.pydocstyle.convention = "google"
     "docs/source/conf.py:invalid-name",
     "doccmd_*_rst_*.py:invalid-name",
 ]
-"SPELLING".spelling-dict = "en_US"
-"SPELLING".spelling-private-dict-file = "spelling_private_dict.txt"
-"SPELLING".spelling-store-unknown-words = "no"
+SPELLING.spelling-dict = "en_US"
+SPELLING.spelling-private-dict-file = "spelling_private_dict.txt"
+SPELLING.spelling-store-unknown-words = "no"
 
 [tool.check-manifest]
 ignore = [
