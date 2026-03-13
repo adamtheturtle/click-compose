@@ -29,7 +29,7 @@ def _double(
 
 
 def _build_args(items: list[int]) -> list[str]:
-    """Build CLI args from a list of integers."""
+    """Build CLI arguments from a list of integers."""
     args: list[str] = []
     for item in items:
         args.extend(["--nums", str(object=item)])
