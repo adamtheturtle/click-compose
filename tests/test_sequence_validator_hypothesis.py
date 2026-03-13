@@ -63,7 +63,7 @@ def test_empty_sequence() -> None:
     """Empty sequence returns empty sequence."""
     result = sequence_validator(validator=_identity)(None, None, [])
     assert result is not None
-    assert list(result) == []
+    assert not list(result)
 
 
 def test_none_returns_none() -> None:
