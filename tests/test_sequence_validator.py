@@ -28,49 +28,143 @@ def _double(
     return value * 2
 
 
+def _build_args(items: list[int]) -> list[str]:
+    """Build CLI args from a list of integers."""
+    args: list[str] = []
+    for item in items:
+        args.extend(["--nums", str(object=item)])
+    return args
+
+
 @given(items=st.lists(elements=st.integers()))
 def test_identity_preserves_values(items: list[int]) -> None:
     """Sequence_validator with identity returns the same values."""
-    result = sequence_validator(validator=_identity)(None, None, items)
-    assert result is not None
-    assert list(result) == items
+
+    @click.command()
+    @click.option(
+        "--nums",
+        multiple=True,
+        type=int,
+        callback=sequence_validator(validator=_identity),
+    )
+    def cmd(nums: tuple[int, ...]) -> None:
+        """Test command."""
+        for num in nums:
+            click.echo(message=num)
+
+    runner = CliRunner()
+    result = runner.invoke(cli=cmd, args=_build_args(items=items))
+    assert result.exit_code == 0
+    expected = "\n".join(str(object=x) for x in items)
+    assert result.output.strip() == expected
 
 
 @given(items=st.lists(elements=st.integers()))
 def test_maps_function_over_elements(items: list[int]) -> None:
     """Sequence_validator(f)(items) == [f(item) for item in items]."""
-    result = sequence_validator(validator=_double)(None, None, items)
-    assert result is not None
-    assert list(result) == [x * 2 for x in items]
+
+    @click.command()
+    @click.option(
+        "--nums",
+        multiple=True,
+        type=int,
+        callback=sequence_validator(validator=_double),
+    )
+    def cmd(nums: tuple[int, ...]) -> None:
+        """Test command."""
+        for num in nums:
+            click.echo(message=num)
+
+    runner = CliRunner()
+    result = runner.invoke(cli=cmd, args=_build_args(items=items))
+    assert result.exit_code == 0
+    expected = "\n".join(str(object=x * 2) for x in items)
+    assert result.output.strip() == expected
 
 
 @given(items=st.lists(elements=st.integers()))
 def test_preserves_length(items: list[int]) -> None:
     """Output length matches input length."""
-    result = sequence_validator(validator=_identity)(None, None, items)
-    assert result is not None
-    assert len(list(result)) == len(items)
+
+    @click.command()
+    @click.option(
+        "--nums",
+        multiple=True,
+        type=int,
+        callback=sequence_validator(validator=_identity),
+    )
+    def cmd(nums: tuple[int, ...]) -> None:
+        """Test command."""
+        click.echo(message=len(nums))
+
+    runner = CliRunner()
+    result = runner.invoke(cli=cmd, args=_build_args(items=items))
+    assert result.exit_code == 0
+    assert result.output.strip() == str(object=len(items))
 
 
 @given(items=st.lists(elements=st.integers()))
 def test_preserves_order(items: list[int]) -> None:
     """Element order is preserved."""
-    result = sequence_validator(validator=_identity)(None, None, items)
-    assert result is not None
-    assert list(result) == items
+
+    @click.command()
+    @click.option(
+        "--nums",
+        multiple=True,
+        type=int,
+        callback=sequence_validator(validator=_identity),
+    )
+    def cmd(nums: tuple[int, ...]) -> None:
+        """Test command."""
+        click.echo(message=",".join(str(object=n) for n in nums))
+
+    runner = CliRunner()
+    result = runner.invoke(cli=cmd, args=_build_args(items=items))
+    assert result.exit_code == 0
+    expected = ",".join(str(object=x) for x in items)
+    assert result.output.strip() == expected
 
 
 def test_empty_sequence() -> None:
     """Empty sequence returns empty sequence."""
-    result = sequence_validator(validator=_identity)(None, None, [])
-    assert result is not None
-    assert not list(result)
+
+    @click.command()
+    @click.option(
+        "--nums",
+        multiple=True,
+        type=int,
+        callback=sequence_validator(validator=_identity),
+    )
+    def cmd(nums: tuple[int, ...]) -> None:
+        """Test command."""
+        click.echo(message=f"Count: {len(nums)}")
+
+    runner = CliRunner()
+    result = runner.invoke(cli=cmd, args=[])
+    assert result.exit_code == 0
+    assert "Count: 0" in result.output
 
 
 def test_none_returns_none() -> None:
     """None input returns None."""
-    result = sequence_validator(validator=_identity)(None, None, None)
-    assert result is None
+
+    @click.command()
+    @click.option(
+        "--num",
+        type=int,
+        default=None,
+        callback=sequence_validator(
+            validator=lambda _c, _p, v: v,
+        ),
+    )
+    def cmd(num: int | None) -> None:
+        """Test command."""
+        click.echo(message=f"Value: {num}")
+
+    runner = CliRunner()
+    result = runner.invoke(cli=cmd, args=[])
+    assert result.exit_code == 0
+    assert "Value: None" in result.output
 
 
 def test_sequence_validator_with_validation() -> None:
