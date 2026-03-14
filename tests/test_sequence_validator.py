@@ -28,14 +28,6 @@ def _double(
     return value * 2
 
 
-def _build_args(items: list[int]) -> list[str]:
-    """Build CLI arguments from a list of integers."""
-    args: list[str] = []
-    for item in items:
-        args.extend(["--nums", str(object=item)])
-    return args
-
-
 @given(items=st.lists(elements=st.integers()))
 def test_identity_preserves_values(items: list[int]) -> None:
     """Sequence_validator with identity returns the same values."""
@@ -52,8 +44,12 @@ def test_identity_preserves_values(items: list[int]) -> None:
         for num in nums:
             click.echo(message=num)
 
+    args: list[str] = []
+    for item in items:
+        args.extend(["--nums", str(object=item)])
+
     runner = CliRunner()
-    result = runner.invoke(cli=cmd, args=_build_args(items=items))
+    result = runner.invoke(cli=cmd, args=args)
     assert result.exit_code == 0
     expected = "\n".join(str(object=x) for x in items)
     assert result.output.strip() == expected
@@ -75,8 +71,12 @@ def test_maps_function_over_elements(items: list[int]) -> None:
         for num in nums:
             click.echo(message=num)
 
+    args: list[str] = []
+    for item in items:
+        args.extend(["--nums", str(object=item)])
+
     runner = CliRunner()
-    result = runner.invoke(cli=cmd, args=_build_args(items=items))
+    result = runner.invoke(cli=cmd, args=args)
     assert result.exit_code == 0
     expected = "\n".join(str(object=x * 2) for x in items)
     assert result.output.strip() == expected
@@ -97,8 +97,12 @@ def test_preserves_length(items: list[int]) -> None:
         """Test command."""
         click.echo(message=len(nums))
 
+    args: list[str] = []
+    for item in items:
+        args.extend(["--nums", str(object=item)])
+
     runner = CliRunner()
-    result = runner.invoke(cli=cmd, args=_build_args(items=items))
+    result = runner.invoke(cli=cmd, args=args)
     assert result.exit_code == 0
     assert result.output.strip() == str(object=len(items))
 
@@ -118,8 +122,12 @@ def test_preserves_order(items: list[int]) -> None:
         """Test command."""
         click.echo(message=",".join(str(object=n) for n in nums))
 
+    args: list[str] = []
+    for item in items:
+        args.extend(["--nums", str(object=item)])
+
     runner = CliRunner()
-    result = runner.invoke(cli=cmd, args=_build_args(items=items))
+    result = runner.invoke(cli=cmd, args=args)
     assert result.exit_code == 0
     expected = ",".join(str(object=x) for x in items)
     assert result.output.strip() == expected
