@@ -55,8 +55,10 @@ jobs:
 
       - name: Get the changelog underline
         id: changelog_underline
+        env:
+          RELEASE: ${{ steps.calver.outputs.release }}
         run: |
-          underline="$(echo "${{ steps.calver.outputs.release }}" | tr -c '\n' '-')"
+          underline="$(echo "$RELEASE" | tr -c '\n' '-')"
           echo "underline=${underline}" >> "$GITHUB_OUTPUT"
 
       - name: Update changelog
@@ -74,8 +76,10 @@ jobs:
           regex: false
 
       - name: Check Update changelog was modified
+        env:
+          MODIFIED_FILES: ${{ steps.update_changelog.outputs.modifiedFiles }}
         run: |
-          if [ "${{ steps.update_changelog.outputs.modifiedFiles }}" = "0" ]; then
+          if [ "$MODIFIED_FILES" = "0" ]; then
             echo "Error: No files were modified when updating changelog"
             exit 1
           fi
@@ -98,10 +102,12 @@ jobs:
 
       - name: Build a binary wheel and a source tarball
         id: build-wheel
+        env:
+          NEW_TAG: ${{ steps.tag_version.outputs.new_tag }}
         run: |
           sudo rm -rf dist/ build/
           git fetch --tags
-          git checkout ${{ steps.tag_version.outputs.new_tag }}
+          git checkout "$NEW_TAG"
           uv build --sdist --wheel --out-dir dist/
           WHEEL="$(ls dist/*.whl)"
           uv run --extra=release check-wheel-contents "${WHEEL}"
