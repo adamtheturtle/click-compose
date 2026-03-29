@@ -1,7 +1,14 @@
 click-compose
 =============
 
+|Build Status| |PyPI|
+
 Composable Click callback utilities for building flexible CLI applications.
+
+.. |Build Status| image:: https://github.com/adamtheturtle/click-compose/actions/workflows/ci.yml/badge.svg?branch=main
+   :target: https://github.com/adamtheturtle/click-compose/actions/workflows/ci.yml
+.. |PyPI| image:: https://badge.fury.io/py/click-compose.svg
+   :target: https://badge.fury.io/py/click-compose
 
 .. contents::
    :local:
