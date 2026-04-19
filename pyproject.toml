@@ -61,6 +61,7 @@ optional-dependencies.dev = [
     "pyright==1.1.408",
     "pyroma==5.0.1",
     "pytest==9.0.3",
+    "pytest-beartype-tests",
     "pytest-cov==7.1.0",
     "pytest-regressions==2.10.0",
     "pyyaml==6.0.3",
@@ -81,6 +82,9 @@ optional-dependencies.dev = [
 optional-dependencies.release = [ "check-wheel-contents==0.6.3" ]
 urls.Source = "https://github.com/adamtheturtle/click-compose"
 
+[dependency-groups]
+dev = []
+
 [tool.setuptools]
 zip-safe = false
 package-data.click_compose = [
@@ -95,6 +99,9 @@ bdist_wheel.universal = true
 
 [tool.setuptools_scm]
 version_scheme = "post-release"
+
+[tool.uv]
+sources.pytest-beartype-tests = { git = "https://github.com/adamtheturtle/pytest-beartype-tests.git", rev = "bc81d99" }
 
 [tool.ruff]
 line-length = 79
@@ -292,7 +299,6 @@ ignore_path = [
 ignore_names = [
     # pytest configuration
     "pytest_collect_file",
-    "pytest_collection_modifyitems",
     "pytest_plugins",
     # pytest fixtures
     "fixture_*",
