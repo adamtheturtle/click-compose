@@ -1,6 +1,8 @@
 ---
 fail_fast: true
 
+.uv_version: &uv_version uv==0.9.5
+
 ci:
   skip:
     - actionlint
@@ -114,7 +116,7 @@ repos:
         language: python
         pass_filenames: false
         types_or: [yaml]
-        additional_dependencies: [uv==0.9.5]
+        additional_dependencies: [*uv_version]
         stages: [pre-commit]
 
       - id: check-manifest
@@ -122,7 +124,7 @@ repos:
         entry: uv run --extra=dev check-manifest
         language: python
         pass_filenames: false
-        additional_dependencies: [uv==0.9.5]
+        additional_dependencies: [*uv_version]
         stages: [pre-push]
 
       - id: deptry
@@ -130,7 +132,7 @@ repos:
         entry: uv run --extra=dev deptry src
         language: python
         pass_filenames: false
-        additional_dependencies: [uv==0.9.5]
+        additional_dependencies: [*uv_version]
         stages: [pre-push]
 
       - id: doc8
@@ -138,7 +140,7 @@ repos:
         entry: uv run --extra=dev doc8
         language: python
         files: \.(rst|txt)$
-        additional_dependencies: [uv==0.9.5]
+        additional_dependencies: [*uv_version]
         stages: [pre-commit]
 
       - id: pydocstringformatter
@@ -146,7 +148,7 @@ repos:
         entry: uv run --extra=dev pydocstringformatter
         language: python
         types_or: [python, pyi]
-        additional_dependencies: [uv==0.9.5]
+        additional_dependencies: [*uv_version]
         stages: [pre-commit]
 
       - id: docs
@@ -154,7 +156,7 @@ repos:
         entry: uv run --extra=dev sphinx-build -W docs/source/ docs/build/
         language: python
         pass_filenames: false
-        additional_dependencies: [uv==0.9.5]
+        additional_dependencies: [*uv_version]
         stages: [pre-push]
 
       - id: interrogate
@@ -162,7 +164,7 @@ repos:
         entry: uv run --extra=dev interrogate
         language: python
         types_or: [python]
-        additional_dependencies: [uv==0.9.5]
+        additional_dependencies: [*uv_version]
         stages: [pre-push]
 
       - id: interrogate-docs
@@ -171,7 +173,7 @@ repos:
           --command="interrogate"
         language: python
         types_or: [markdown, rst]
-        additional_dependencies: [uv==0.9.5]
+        additional_dependencies: [*uv_version]
         stages: [pre-commit]
 
       - id: linkcheck
@@ -179,7 +181,7 @@ repos:
         entry: uv run --extra=dev sphinx-build -W -b linkcheck docs/source/ docs/build/
         language: python
         pass_filenames: false
-        additional_dependencies: [uv==0.9.5]
+        additional_dependencies: [*uv_version]
         stages: [manual]
 
       - id: mypy
@@ -187,7 +189,7 @@ repos:
         entry: uv run --extra=dev mypy
         language: python
         types_or: [python]
-        additional_dependencies: [uv==0.9.5]
+        additional_dependencies: [*uv_version]
         stages: [pre-push]
         require_serial: true
 
@@ -197,7 +199,7 @@ repos:
         entry: uv run --extra=dev doccmd --no-write-to-file --language=python --command="mypy"
         language: python
         types_or: [markdown, rst]
-        additional_dependencies: [uv==0.9.5]
+        additional_dependencies: [*uv_version]
         stages: [pre-push]
 
       - id: pylint
@@ -205,7 +207,7 @@ repos:
         entry: uv run --extra=dev pylint
         language: python
         types_or: [python]
-        additional_dependencies: [uv==0.9.5]
+        additional_dependencies: [*uv_version]
         stages: [pre-push]
         require_serial: true
 
@@ -215,7 +217,7 @@ repos:
           --command="pylint"
         language: python
         types_or: [markdown, rst]
-        additional_dependencies: [uv==0.9.5]
+        additional_dependencies: [*uv_version]
         stages: [manual]
 
       - id: pyproject-fmt-fix
@@ -223,7 +225,7 @@ repos:
         entry: uv run --extra=dev pyproject-fmt
         language: python
         files: pyproject.toml
-        additional_dependencies: [uv==0.9.5]
+        additional_dependencies: [*uv_version]
         stages: [pre-commit]
 
       - id: pyright
@@ -232,7 +234,7 @@ repos:
         language: python
         types_or: [python]
         pass_filenames: false
-        additional_dependencies: [uv==0.9.5]
+        additional_dependencies: [*uv_version]
         stages: [pre-push]
         require_serial: true
 
@@ -242,7 +244,7 @@ repos:
           --command="pyright"
         language: python
         types_or: [markdown, rst]
-        additional_dependencies: [uv==0.9.5]
+        additional_dependencies: [*uv_version]
         stages: [pre-push]
 
       - id: pyright-verifytypes
@@ -250,7 +252,7 @@ repos:
         entry: uv run --extra=dev pyright --verifytypes click_compose
         language: python
         pass_filenames: false
-        additional_dependencies: [uv==0.9.5]
+        additional_dependencies: [*uv_version]
         stages: [pre-push]
 
       - id: ty
@@ -259,7 +261,7 @@ repos:
         language: python
         types_or: [python, toml]
         pass_filenames: false
-        additional_dependencies: [uv==0.9.5]
+        additional_dependencies: [*uv_version]
         stages: [pre-push]
 
       - id: ty-docs
@@ -268,7 +270,7 @@ repos:
           --command="ty check"
         language: python
         types_or: [markdown, rst]
-        additional_dependencies: [uv==0.9.5]
+        additional_dependencies: [*uv_version]
         stages: [pre-push]
 
       - id: pyrefly
@@ -277,7 +279,7 @@ repos:
         language: python
         types_or: [python, toml]
         pass_filenames: false
-        additional_dependencies: [uv==0.9.5]
+        additional_dependencies: [*uv_version]
         stages: [pre-push]
 
       - id: pyrefly-docs
@@ -286,7 +288,7 @@ repos:
           --command="pyrefly check"
         language: python
         types_or: [markdown, rst]
-        additional_dependencies: [uv==0.9.5]
+        additional_dependencies: [*uv_version]
         stages: [pre-push]
 
       - id: pyroma
@@ -294,7 +296,7 @@ repos:
         entry: uv run --extra=dev pyroma --min 10 .
         language: python
         pass_filenames: false
-        additional_dependencies: [uv==0.9.5]
+        additional_dependencies: [*uv_version]
         stages: [pre-push]
 
       - id: ruff-check-fix
@@ -302,7 +304,7 @@ repos:
         entry: uv run --extra=dev ruff check --fix --force-exclude
         language: python
         types_or: [python, pyi]
-        additional_dependencies: [uv==0.9.5]
+        additional_dependencies: [*uv_version]
         stages: [pre-commit]
         require_serial: true
 
@@ -311,7 +313,7 @@ repos:
         entry: uv run --extra=dev doccmd --language=python --command="ruff check --fix"
         language: python
         types_or: [markdown, rst]
-        additional_dependencies: [uv==0.9.5]
+        additional_dependencies: [*uv_version]
         stages: [pre-commit]
 
       - id: ruff-format-fix
@@ -319,7 +321,7 @@ repos:
         entry: uv run --extra=dev ruff format --force-exclude
         language: python
         types_or: [python, pyi]
-        additional_dependencies: [uv==0.9.5]
+        additional_dependencies: [*uv_version]
         stages: [pre-commit]
         require_serial: true
 
@@ -329,7 +331,7 @@ repos:
           format"
         language: python
         types_or: [markdown, rst]
-        additional_dependencies: [uv==0.9.5]
+        additional_dependencies: [*uv_version]
         stages: [pre-commit]
 
       - id: shellcheck
@@ -337,7 +339,7 @@ repos:
         entry: uv run --extra=dev shellcheck
         language: python
         types: [shell]
-        additional_dependencies: [uv==0.9.5]
+        additional_dependencies: [*uv_version]
         stages: [pre-commit]
 
       - id: shellcheck-docs
@@ -346,7 +348,7 @@ repos:
           --language=console --command="shellcheck --shell=bash"
         language: python
         types_or: [markdown, rst]
-        additional_dependencies: [uv==0.9.5]
+        additional_dependencies: [*uv_version]
         stages: [pre-commit]
 
       - id: shfmt
@@ -354,7 +356,7 @@ repos:
         entry: uv run --extra=dev shfmt -w -s -i 4
         language: python
         types: [shell]
-        additional_dependencies: [uv==0.9.5]
+        additional_dependencies: [*uv_version]
         stages: [pre-commit]
 
       - id: shfmt-docs
@@ -363,7 +365,7 @@ repos:
           --no-pad-file --command="shfmt --write --space-redirects --indent=4"
         language: python
         types_or: [markdown, rst]
-        additional_dependencies: [uv==0.9.5]
+        additional_dependencies: [*uv_version]
         stages: [pre-commit]
 
       - id: spelling
@@ -371,7 +373,7 @@ repos:
         entry: uv run --extra=dev sphinx-build -W -b spelling docs/source/ docs/build/
         language: python
         pass_filenames: false
-        additional_dependencies: [uv==0.9.5]
+        additional_dependencies: [*uv_version]
         stages: [pre-push]
 
       - id: sphinx-lint
@@ -379,7 +381,7 @@ repos:
         entry: uv run --extra=dev sphinx-lint --enable all --max-line-length 200
         language: python
         types: [rst]
-        additional_dependencies: [uv==0.9.5]
+        additional_dependencies: [*uv_version]
         stages: [pre-commit]
 
       - id: vulture
@@ -387,7 +389,7 @@ repos:
         entry: uv run --extra=dev vulture .
         language: python
         pass_filenames: false
-        additional_dependencies: [uv==0.9.5]
+        additional_dependencies: [*uv_version]
         stages: [pre-push]
 
       - id: vulture-docs
@@ -396,7 +398,7 @@ repos:
           --command="vulture"
         language: python
         types_or: [markdown, rst]
-        additional_dependencies: [uv==0.9.5]
+        additional_dependencies: [*uv_version]
         stages: [pre-commit]
 
       - id: yamlfix
@@ -404,7 +406,7 @@ repos:
         entry: uv run --extra=dev yamlfix
         language: python
         types: [yaml]
-        additional_dependencies: [uv==0.9.5]
+        additional_dependencies: [*uv_version]
         stages: [pre-commit]
 
       - id: zizmor
@@ -413,5 +415,5 @@ repos:
         language: python
         pass_filenames: false
         types_or: [yaml]
-        additional_dependencies: [uv==0.9.5]
+        additional_dependencies: [*uv_version]
         stages: [pre-commit]
