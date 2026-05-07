@@ -197,8 +197,8 @@ repos:
       # We do not use --example-workers 0 due to https://github.com/python/mypy/issues/18283
       - id: mypy-docs
         name: mypy-docs
-        entry: uv run --extra=dev doccmd --no-write-to-file --language=python --command="mypy"
-        args: [--num-workers=4]
+        entry: uv run --extra=dev doccmd --no-write-to-file --language=python --command="mypy
+          --num-workers=4"
         language: python
         types_or: [markdown, rst]
         additional_dependencies: [*uv_version]
