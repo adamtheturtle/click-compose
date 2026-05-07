@@ -187,6 +187,7 @@ repos:
       - id: mypy
         name: mypy
         entry: uv run --extra=dev mypy
+        args: [--num-workers=4]
         language: python
         types_or: [python]
         additional_dependencies: [*uv_version]
@@ -197,6 +198,7 @@ repos:
       - id: mypy-docs
         name: mypy-docs
         entry: uv run --extra=dev doccmd --no-write-to-file --language=python --command="mypy"
+        args: [--num-workers=4]
         language: python
         types_or: [markdown, rst]
         additional_dependencies: [*uv_version]
