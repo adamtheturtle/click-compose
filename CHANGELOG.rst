@@ -1,10 +1,7 @@
 Changelog
 =========
 
-Next
-----
-
-- Drop Python 3.10 support (requires Python >=3.11).
+.. towncrier release notes start
 
 2025.10.27.3
 ------------
