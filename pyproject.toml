@@ -45,7 +45,7 @@ optional-dependencies.dev = [
     "doc8==2.0.0",
     "doccmd==2026.5.25",
     "furo==2025.12.19",
-    "hypothesis==6.155.7",
+    "hypothesis==6.156.1",
     "interrogate==1.7.0",
     "mypy[faster-cache]==2.1.0",
     "mypy-strict-kwargs==2026.5.20.1",
