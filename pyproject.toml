@@ -99,9 +99,6 @@ package-data.click_compose = [
 ]
 zip-safe = false
 
-[tool.distutils]
-bdist_wheel.universal = true
-
 [tool.setuptools_scm]
 version_scheme = "post-release"
 
