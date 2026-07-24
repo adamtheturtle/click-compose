@@ -65,7 +65,7 @@ optional-dependencies.dev = [
     "pytest-cov==7.1.0",
     "pytest-regressions==2.11.0",
     "pyyaml==6.0.3",
-    "ruff==0.15.22",
+    "ruff==0.16.0",
     "shellcheck-py==0.11.0.1",
     "shfmt-py==4.0.0",
     "sphinx>=8.1.3",
@@ -110,6 +110,8 @@ lint.select = [
 lint.ignore = [
     # Ruff warns that this conflicts with the formatter.
     "COM812",
+    # This project does not use per-file copyright notices.
+    "CPY001",
     # Allow our chosen docstring line-style - pydocstringformatter handles formatting
     # but doesn't enforce D205 (blank line after summary) or D212 (summary on first line).
     "D205",
