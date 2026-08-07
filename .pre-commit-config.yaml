@@ -97,7 +97,7 @@ repos:
         stages: [pre-push]
 
       # Vale enforces prose style rules, such as banning em dashes, in
-      # reStructuredText files.
+      # reStructuredText and Markdown files.
       # The rules come from the ``ClearProse`` package pinned in ``.vale.ini``,
       # which ``vale sync`` downloads into the (gitignored) ``styles``
       # directory.
@@ -111,7 +111,7 @@ repos:
         entry: uv run --extra=dev vale sync
         language: python
         pass_filenames: false
-        files: (\.rst$|^\.vale\.ini$)
+        files: (\.(rst|md)$|^\.vale\.ini$)
         additional_dependencies: [*uv_version]
         stages: [pre-commit]
 
@@ -119,7 +119,7 @@ repos:
         name: vale
         entry: uv run --extra=dev vale
         language: python
-        types_or: [rst]
+        types_or: [rst, markdown]
         require_serial: true
         additional_dependencies: [*uv_version]
         stages: [pre-commit]
