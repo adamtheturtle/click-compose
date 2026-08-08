@@ -35,7 +35,7 @@ dynamic = [
     "version",
 ]
 dependencies = [
-    "beartype>=0.22.9",
+    "beartype==0.23.0rc0",
     "click>=8.3.1",
 ]
 optional-dependencies.dev = [
