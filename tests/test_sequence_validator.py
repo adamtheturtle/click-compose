@@ -161,9 +161,7 @@ def test_none_returns_none() -> None:
         "--num",
         type=int,
         default=None,
-        callback=sequence_validator(
-            validator=lambda _c, _p, v: v,
-        ),
+        callback=sequence_validator(validator=_identity),
     )
     def cmd(num: int | None) -> None:
         """Test command."""
