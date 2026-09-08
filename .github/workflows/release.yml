@@ -1,11 +1,22 @@
 ---
 name: Release
 
-on: workflow_dispatch
+on:
+  workflow_dispatch:
+    inputs:
+      publish_only:
+        description: Build and publish an existing tag without changing the changelog
+        type: boolean
+        default: false
+      tag:
+        description: Existing tag to publish when publish_only is selected
+        type: string
+        default: '2026.09.08'
 
 jobs:
   build:
     name: Publish a release
+    if: ${{ !inputs.publish_only }}
     runs-on: ubuntu-latest
 
     # Specifying an environment is strongly recommended by PyPI.
@@ -114,3 +125,50 @@ jobs:
           makeLatest: true
           name: Release ${{ steps.tag_version.outputs.new_tag }}
           bodyFile: release-notes.md
+
+  publish-existing:
+    name: Publish an existing tag
+    if: ${{ inputs.publish_only }}
+    runs-on: ubuntu-latest
+
+    environment: release
+
+    permissions:
+      id-token: write
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v10.0.1
+        with:
+          enable-cache: false
+
+      - name: Build the existing tag
+        env:
+          TAG: ${{ inputs.tag }}
+        run: |
+          git rev-parse --verify "refs/tags/${TAG}^{commit}"
+          git checkout "$TAG"
+          uv build --sdist --wheel --out-dir dist/
+          WHEEL="$(ls dist/*.whl)"
+          uv run --group=release check-wheel-contents "$WHEEL"
+
+      - name: Publish distribution to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          verbose: true
+          skip-existing: true
+
+      - name: Create a GitHub release
+        uses: ncipollo/release-action@v1
+        with:
+          artifactErrorsFailBuild: true
+          tag: ${{ inputs.tag }}
+          makeLatest: true
+          name: Release ${{ inputs.tag }}
+          generateReleaseNotes: true
