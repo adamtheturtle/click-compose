@@ -59,7 +59,7 @@ jobs:
       - name: Generate the GitHub release notes
         env:
           RELEASE: ${{ steps.calver.outputs.release }}
-        run: uv run --extra=release towncrier build --draft --version "$RELEASE" >
+        run: uv run --group=release towncrier build --draft --version "$RELEASE" >
           release-notes.md
 
       # Assemble the same fragments into CHANGELOG.rst under a new
@@ -67,7 +67,7 @@ jobs:
       - name: Update the changelog
         env:
           RELEASE: ${{ steps.calver.outputs.release }}
-        run: uv run --extra=release towncrier build --yes --version "$RELEASE"
+        run: uv run --group=release towncrier build --yes --version "$RELEASE"
 
       - uses: stefanzweifel/git-auto-commit-action@v7
         id: commit
@@ -96,7 +96,7 @@ jobs:
           git checkout "$NEW_TAG"
           uv build --sdist --wheel --out-dir dist/
           WHEEL="$(ls dist/*.whl)"
-          uv run --extra=release check-wheel-contents "${WHEEL}"
+          uv run --group=release check-wheel-contents "${WHEEL}"
           echo "wheel_filename=${WHEEL}" >> "$GITHUB_OUTPUT"
 
       - name: Publish distribution 📦 to PyPI
