@@ -42,10 +42,10 @@ def sequence_validator(
         """Apply the validator to each element in the sequence."""
         if value is None:
             return None
-        return_values: tuple[U, ...] = ()
+        return_values: list[U] = []
         for item in value:
             returned_value = validator(ctx, param, item)
-            return_values = (*return_values, returned_value)
+            return_values.append(returned_value)
         return return_values
 
     return callback
