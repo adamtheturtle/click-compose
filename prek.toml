@@ -194,7 +194,7 @@ hooks = [
   {
     id = "interrogate-docs",
     name = "interrogate docs",
-    entry = 'uv run --extra=dev doccmd --no-write-to-file --example-workers 0 --language=python --command="interrogate"',
+    entry = 'uvx --from=doccmd==2026.9.1 doccmd --no-write-to-file --example-workers 0 --language=python --command=".venv/bin/interrogate"',
     language = "python",
     types_or = [
       "markdown",
@@ -225,7 +225,7 @@ hooks = [
   {
     id = "mypy-docs",
     name = "mypy-docs",
-    entry = 'uv run --extra=dev doccmd --no-write-to-file --language=python --command="mypy --num-workers=4"',
+    entry = 'uvx --from=doccmd==2026.9.1 doccmd --no-write-to-file --language=python --command=".venv/bin/mypy --num-workers=4"',
     language = "python",
     types_or = [
       "markdown",
@@ -247,7 +247,7 @@ hooks = [
   {
     id = "pylint-docs",
     name = "pylint-docs",
-    entry = 'uv run --extra=dev doccmd --no-write-to-file --example-workers 0 --language=python --command="pylint"',
+    entry = 'uvx --from=doccmd==2026.9.1 doccmd --no-write-to-file --example-workers 0 --language=python --command=".venv/bin/pylint"',
     language = "python",
     types_or = [
       "markdown",
@@ -279,7 +279,7 @@ hooks = [
   {
     id = "pyright-docs",
     name = "pyright-docs",
-    entry = 'uv run --extra=dev doccmd --no-write-to-file --example-workers 0 --language=python --command="pyright"',
+    entry = 'uvx --from=doccmd==2026.9.1 doccmd --no-write-to-file --example-workers 0 --language=python --command=".venv/bin/pyright --pythonpath .venv/bin/python"',
     language = "python",
     types_or = [
       "markdown",
@@ -313,7 +313,7 @@ hooks = [
   {
     id = "ty-docs",
     name = "ty-docs",
-    entry = 'uv run --extra=dev doccmd --no-write-to-file --example-workers 0 --language=python --command="ty check"',
+    entry = 'uvx --from=doccmd==2026.9.1 doccmd --no-write-to-file --example-workers 0 --language=python --command=".venv/bin/ty check --python .venv/bin/python"',
     language = "python",
     types_or = [
       "markdown",
@@ -338,7 +338,7 @@ hooks = [
   {
     id = "pyrefly-docs",
     name = "pyrefly-docs",
-    entry = 'uv run --extra=dev doccmd --no-write-to-file --example-workers 0 --language=python --command="pyrefly check"',
+    entry = 'uvx --from=doccmd==2026.9.1 doccmd --no-write-to-file --example-workers 0 --language=python --command=".venv/bin/pyrefly check --python-interpreter-path .venv/bin/python"',
     language = "python",
     types_or = [
       "markdown",
@@ -372,7 +372,7 @@ hooks = [
   {
     id = "ruff-check-fix-docs",
     name = "ruff check fix docs",
-    entry = 'uv run --extra=dev doccmd --language=python --command="ruff check --fix"',
+    entry = 'uvx --from=doccmd==2026.9.1 doccmd --language=python --command=".venv/bin/ruff check --fix"',
     language = "python",
     types_or = [
       "markdown",
@@ -397,7 +397,7 @@ hooks = [
   {
     id = "ruff-format-fix-docs",
     name = "ruff format docs",
-    entry = 'uv run --extra=dev doccmd --language=python --no-pad-file --command="ruff format"',
+    entry = 'uvx --from=doccmd==2026.9.1 doccmd --language=python --no-pad-file --command=".venv/bin/ruff format"',
     language = "python",
     types_or = [
       "markdown",
@@ -441,7 +441,7 @@ hooks = [
   {
     id = "shellcheck-docs",
     name = "shellcheck-docs",
-    entry = 'uv run --extra=dev doccmd --no-write-to-file --example-workers 0 --language=shell --language=console --command="shellcheck --shell=bash"',
+    entry = 'uvx --from=doccmd==2026.9.1 doccmd --no-write-to-file --example-workers 0 --language=shell --language=console --command=".venv/bin/shellcheck --shell=bash"',
     language = "python",
     types_or = [
       "markdown",
@@ -462,7 +462,7 @@ hooks = [
   {
     id = "shfmt-docs",
     name = "shfmt-docs",
-    entry = 'uv run --extra=dev doccmd --language=shell --language=console --skip-marker=shfmt --no-pad-file --command="shfmt --write --space-redirects --indent=4"',
+    entry = 'uvx --from=doccmd==2026.9.1 doccmd --language=shell --language=console --skip-marker=shfmt --no-pad-file --command=".venv/bin/shfmt --write --space-redirects --indent=4"',
     language = "python",
     types_or = [
       "markdown",
@@ -501,7 +501,7 @@ hooks = [
   {
     id = "vulture-docs",
     name = "vulture docs",
-    entry = 'uv run --extra=dev doccmd --no-write-to-file --example-workers 0 --language=python --command="vulture"',
+    entry = 'uvx --from=doccmd==2026.9.1 doccmd --no-write-to-file --example-workers 0 --language=python --command=".venv/bin/vulture"',
     language = "python",
     types_or = [
       "markdown",

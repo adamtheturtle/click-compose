@@ -43,7 +43,6 @@ optional-dependencies.dev = [
     "check-manifest==0.51",
     "deptry==0.25.1",
     "doc8==2.0.0",
-    "doccmd==2026.9.1",
     "furo==2025.12.19",
     "hypothesis==6.167.1",
     "interrogate==1.7.0",
@@ -325,7 +324,7 @@ plugins = [
 
 [tool.pyrefly]
 errors.non-exhaustive-match = "error"
-preset = "strict"
+preset = "all"
 
 [tool.pyright]
 typeCheckingMode = "strict"
