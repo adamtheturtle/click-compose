@@ -101,6 +101,7 @@ warning_is_error = True
 nitpick_ignore = [
     ("py:class", "click_compose.T"),
     ("py:class", "click_compose.U"),
+    ("py:class", "click_compose.V"),
 ]
 
 autoclass_content = "both"

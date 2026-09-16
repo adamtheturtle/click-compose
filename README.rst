@@ -31,23 +31,23 @@ Quick Start
 
 ``click-compose`` provides utilities for composing Click callbacks:
 
-multi_callback
-~~~~~~~~~~~~~~
+compose_callbacks
+~~~~~~~~~~~~~~~~~
 
 Combine multiple callbacks into a single callback that applies them in sequence:
 
 .. code-block:: python
 
-   """Example of using multi_callback to combine validators."""
+   """Example of using compose_callbacks to combine validators."""
 
    import click
 
-   from click_compose import multi_callback
+   from click_compose import compose_callbacks
 
 
    def validate_positive(
-       _ctx: click.Context,
-       _param: click.Parameter,
+       _ctx: click.Context | None,
+       _param: click.Parameter | None,
        value: int,
    ) -> int:
        """Validate that value is positive."""
@@ -61,8 +61,8 @@ Combine multiple callbacks into a single callback that applies them in sequence:
 
 
    def validate_max_100(
-       _ctx: click.Context,
-       _param: click.Parameter,
+       _ctx: click.Context | None,
+       _param: click.Parameter | None,
        value: int,
    ) -> int:
        """Validate that value is at most 100."""
@@ -76,7 +76,10 @@ Combine multiple callbacks into a single callback that applies them in sequence:
    @click.option(
        "--count",
        type=int,
-       callback=multi_callback(callbacks=[validate_positive, validate_max_100]),
+       callback=compose_callbacks(
+           first=validate_positive,
+           second=validate_max_100,
+       ),
    )
    def cmd(count: int) -> None:
        """Example command with multiple validators."""

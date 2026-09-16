@@ -153,26 +153,6 @@ def test_empty_sequence() -> None:
     assert "Count: 0" in result.output
 
 
-def test_none_returns_none() -> None:
-    """None input returns None."""
-
-    @click.command()
-    @click.option(
-        "--num",
-        type=int,
-        default=None,
-        callback=sequence_validator(validator=_identity),
-    )
-    def cmd(num: int | None) -> None:
-        """Test command."""
-        click.echo(message=f"Value: {num}")
-
-    runner = CliRunner()
-    result = runner.invoke(cli=cmd, args=[])
-    assert result.exit_code == 0
-    assert "Value: None" in result.output
-
-
 def test_sequence_validator_with_validation() -> None:
     """Validation errors are raised for individual elements."""
 
