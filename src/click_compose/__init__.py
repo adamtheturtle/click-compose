@@ -11,7 +11,6 @@ from beartype import beartype
 
 T = TypeVar("T")
 U = TypeVar("U")
-V = TypeVar("V")
 _T0 = TypeVar("_T0")
 _T1 = TypeVar("_T1")
 _T2 = TypeVar("_T2")
@@ -80,38 +79,6 @@ def deduplicate(
     del param
 
     return tuple(dict.fromkeys(sequence).keys())
-
-
-@beartype
-def compose_callbacks(
-    *,
-    first: Callable[[click.Context | None, click.Parameter | None, T], U],
-    second: Callable[[click.Context | None, click.Parameter | None, U], V],
-) -> Callable[[click.Context | None, click.Parameter | None, T], V]:
-    """Compose two Click callbacks into one callback.
-
-    The first callback's output is passed to the second callback. Compose the
-    result again to build a longer pipeline while preserving every
-    intermediate type.
-
-    Args:
-        first: The callback to apply first.
-        second: The callback to apply to the first callback's result.
-
-    Returns:
-        A Click callback that applies both callbacks in sequence.
-    """
-
-    def callback(
-        ctx: click.Context | None,
-        param: click.Parameter | None,
-        value: T,
-    ) -> V:
-        """Apply both callbacks in sequence to the value."""
-        intermediate = first(ctx, param, value)
-        return second(ctx, param, intermediate)
-
-    return callback
 
 
 # Finite overloads check each type transition in a callback chain.
