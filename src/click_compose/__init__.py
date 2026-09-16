@@ -4,7 +4,7 @@ applications.
 """
 
 from collections.abc import Callable, Sequence
-from typing import TypeVar
+from typing import TypeAlias, TypeVar, overload
 
 import click
 from beartype import beartype
@@ -12,6 +12,21 @@ from beartype import beartype
 T = TypeVar("T")
 U = TypeVar("U")
 V = TypeVar("V")
+_T0 = TypeVar("_T0")
+_T1 = TypeVar("_T1")
+_T2 = TypeVar("_T2")
+_T3 = TypeVar("_T3")
+_T4 = TypeVar("_T4")
+_T5 = TypeVar("_T5")
+_T6 = TypeVar("_T6")
+_T7 = TypeVar("_T7")
+_T8 = TypeVar("_T8")
+_T9 = TypeVar("_T9")
+_T10 = TypeVar("_T10")
+
+_ClickCallback: TypeAlias = Callable[
+    [click.Context | None, click.Parameter | None, T], U
+]
 
 
 @beartype
@@ -99,18 +114,157 @@ def compose_callbacks(
     return callback
 
 
+@overload
+def multi_callback(
+    *,
+    callbacks: tuple[_ClickCallback[_T0, _T1],],
+) -> _ClickCallback[_T0, _T1]: ...
+
+
+@overload
+def multi_callback(
+    *,
+    callbacks: tuple[
+        _ClickCallback[_T0, _T1],
+        _ClickCallback[_T1, _T2],
+    ],
+) -> _ClickCallback[_T0, _T2]: ...
+
+
+@overload
+def multi_callback(
+    *,
+    callbacks: tuple[
+        _ClickCallback[_T0, _T1],
+        _ClickCallback[_T1, _T2],
+        _ClickCallback[_T2, _T3],
+    ],
+) -> _ClickCallback[_T0, _T3]: ...
+
+
+@overload
+def multi_callback(
+    *,
+    callbacks: tuple[
+        _ClickCallback[_T0, _T1],
+        _ClickCallback[_T1, _T2],
+        _ClickCallback[_T2, _T3],
+        _ClickCallback[_T3, _T4],
+    ],
+) -> _ClickCallback[_T0, _T4]: ...
+
+
+@overload
+def multi_callback(
+    *,
+    callbacks: tuple[
+        _ClickCallback[_T0, _T1],
+        _ClickCallback[_T1, _T2],
+        _ClickCallback[_T2, _T3],
+        _ClickCallback[_T3, _T4],
+        _ClickCallback[_T4, _T5],
+    ],
+) -> _ClickCallback[_T0, _T5]: ...
+
+
+@overload
+def multi_callback(
+    *,
+    callbacks: tuple[
+        _ClickCallback[_T0, _T1],
+        _ClickCallback[_T1, _T2],
+        _ClickCallback[_T2, _T3],
+        _ClickCallback[_T3, _T4],
+        _ClickCallback[_T4, _T5],
+        _ClickCallback[_T5, _T6],
+    ],
+) -> _ClickCallback[_T0, _T6]: ...
+
+
+@overload
+def multi_callback(
+    *,
+    callbacks: tuple[
+        _ClickCallback[_T0, _T1],
+        _ClickCallback[_T1, _T2],
+        _ClickCallback[_T2, _T3],
+        _ClickCallback[_T3, _T4],
+        _ClickCallback[_T4, _T5],
+        _ClickCallback[_T5, _T6],
+        _ClickCallback[_T6, _T7],
+    ],
+) -> _ClickCallback[_T0, _T7]: ...
+
+
+@overload
+def multi_callback(
+    *,
+    callbacks: tuple[
+        _ClickCallback[_T0, _T1],
+        _ClickCallback[_T1, _T2],
+        _ClickCallback[_T2, _T3],
+        _ClickCallback[_T3, _T4],
+        _ClickCallback[_T4, _T5],
+        _ClickCallback[_T5, _T6],
+        _ClickCallback[_T6, _T7],
+        _ClickCallback[_T7, _T8],
+    ],
+) -> _ClickCallback[_T0, _T8]: ...
+
+
+@overload
+def multi_callback(
+    *,
+    callbacks: tuple[
+        _ClickCallback[_T0, _T1],
+        _ClickCallback[_T1, _T2],
+        _ClickCallback[_T2, _T3],
+        _ClickCallback[_T3, _T4],
+        _ClickCallback[_T4, _T5],
+        _ClickCallback[_T5, _T6],
+        _ClickCallback[_T6, _T7],
+        _ClickCallback[_T7, _T8],
+        _ClickCallback[_T8, _T9],
+    ],
+) -> _ClickCallback[_T0, _T9]: ...
+
+
+@overload
+def multi_callback(
+    *,
+    callbacks: tuple[
+        _ClickCallback[_T0, _T1],
+        _ClickCallback[_T1, _T2],
+        _ClickCallback[_T2, _T3],
+        _ClickCallback[_T3, _T4],
+        _ClickCallback[_T4, _T5],
+        _ClickCallback[_T5, _T6],
+        _ClickCallback[_T6, _T7],
+        _ClickCallback[_T7, _T8],
+        _ClickCallback[_T8, _T9],
+        _ClickCallback[_T9, _T10],
+    ],
+) -> _ClickCallback[_T0, _T10]: ...
+
+
+@overload
+def multi_callback(
+    *,
+    callbacks: list[_ClickCallback[T, T]],
+) -> _ClickCallback[T, T]: ...
+
+
 @beartype
 def multi_callback(
     *,
-    callbacks: Sequence[
-        Callable[[click.Context | None, click.Parameter | None, T], T]
-    ],
-) -> Callable[[click.Context | None, click.Parameter | None, T], T]:
-    """Apply same-type Click callbacks in order.
+    callbacks: Sequence[Callable[..., object]],
+) -> Callable[..., object]:
+    """Apply Click callbacks in order.
 
-    Each callback must accept and return the same value type. Use
-    :func:`compose_callbacks` when a callback changes the value type.
-    An empty sequence produces an identity callback.
+    Tuple literals of up to ten callbacks preserve intermediate types
+    under static type checking. A typed list of callbacks with a shared
+    input and output type may have any length. An empty list produces an
+    identity callback.
 
     Args:
         callbacks: The callbacks to apply, in order.
@@ -122,8 +276,8 @@ def multi_callback(
     def callback(
         ctx: click.Context | None,
         param: click.Parameter | None,
-        value: T,
-    ) -> T:
+        value: object,
+    ) -> object:
         """Apply each callback to the preceding result."""
         for item in callbacks:
             value = item(ctx, param, value)

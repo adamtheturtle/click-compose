@@ -102,6 +102,7 @@ nitpick_ignore = [
     ("py:class", "click_compose.T"),
     ("py:class", "click_compose.U"),
     ("py:class", "click_compose.V"),
+    *[("py:class", f"click_compose._T{index}") for index in range(11)],
 ]
 
 autoclass_content = "both"

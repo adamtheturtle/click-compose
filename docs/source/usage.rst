@@ -67,9 +67,11 @@ The value is passed through each callback in order, with the output of one callb
 ``multi_callback``
 ------------------
 
-``multi_callback`` applies any number of callbacks in order when they all accept and return the same type.
-Unlike ``compose_callbacks``, it does not support type-changing stages.
-With no callbacks, it returns the input unchanged.
+``multi_callback`` applies callbacks in order.
+Pass a tuple of up to ten callbacks for statically checked type-changing stages.
+Each callback must accept the preceding callback's result.
+For same-type callbacks, a typed list of any length is supported.
+An empty list returns the input unchanged.
 
 .. code-block:: python
 
@@ -94,13 +96,20 @@ With no callbacks, it returns the input unchanged.
        return value + 10
 
 
+   def to_string(
+       _ctx: click.Context | None, _param: click.Parameter | None, value: int
+   ) -> str:
+       """Convert the value to a string."""
+       return str(object=value)
+
+
    @click.command()
    @click.option(
        "--value",
        type=int,
-       callback=multi_callback(callbacks=[double, add_ten, double]),
+       callback=multi_callback(callbacks=(double, add_ten, to_string)),
    )
-   def cmd(value: int) -> None:
+   def cmd(value: str) -> None:
        """Print the transformed value."""
        click.echo(message=value)
 
