@@ -97,3 +97,36 @@ def compose_callbacks(
         return second(ctx, param, intermediate)
 
     return callback
+
+
+@beartype
+def multi_callback(
+    *,
+    callbacks: Sequence[
+        Callable[[click.Context | None, click.Parameter | None, T], T]
+    ],
+) -> Callable[[click.Context | None, click.Parameter | None, T], T]:
+    """Apply same-type Click callbacks in order.
+
+    Each callback must accept and return the same value type. Use
+    :func:`compose_callbacks` when a callback changes the value type.
+    An empty sequence produces an identity callback.
+
+    Args:
+        callbacks: The callbacks to apply, in order.
+
+    Returns:
+        A Click callback that applies every callback in sequence.
+    """
+
+    def callback(
+        ctx: click.Context | None,
+        param: click.Parameter | None,
+        value: T,
+    ) -> T:
+        """Apply each callback to the preceding result."""
+        for item in callbacks:
+            value = item(ctx, param, value)
+        return value
+
+    return callback

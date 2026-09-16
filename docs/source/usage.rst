@@ -64,6 +64,46 @@ Compose its result again to build a longer type-safe pipeline.
 
 The value is passed through each callback in order, with the output of one callback becoming the input to the next.
 
+``multi_callback``
+------------------
+
+``multi_callback`` applies any number of callbacks in order when they all accept and return the same type.
+Unlike ``compose_callbacks``, it does not support type-changing stages.
+With no callbacks, it returns the input unchanged.
+
+.. code-block:: python
+
+   """Example of using multi_callback."""
+
+   import click
+
+   from click_compose import multi_callback
+
+
+   def double(
+       _ctx: click.Context | None, _param: click.Parameter | None, value: int
+   ) -> int:
+       """Double the value."""
+       return value * 2
+
+
+   def add_ten(
+       _ctx: click.Context | None, _param: click.Parameter | None, value: int
+   ) -> int:
+       """Add ten to the value."""
+       return value + 10
+
+
+   @click.command()
+   @click.option(
+       "--value",
+       type=int,
+       callback=multi_callback(callbacks=[double, add_ten, double]),
+   )
+   def cmd(value: int) -> None:
+       """Print the transformed value."""
+       click.echo(message=value)
+
 ``sequence_validator``
 ----------------------
 
