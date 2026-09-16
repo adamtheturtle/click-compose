@@ -3,66 +3,54 @@ Usage
 
 |project| provides utilities for composing Click callbacks.
 
-``compose_callbacks``
----------------------
+``multi_callback``
+------------------
 
-``compose_callbacks`` creates a Click-compatible callback that applies two callbacks in sequence.
-Compose its result again to build a longer type-safe pipeline.
+``multi_callback`` applies callbacks in order.
+Pass a tuple of up to ten callbacks for statically checked type-changing stages.
+Each callback must accept the preceding callback's result.
+For same-type callbacks, a typed list of any length is supported.
+An empty list returns the input unchanged.
 
 .. code-block:: python
 
-   """Example of using compose_callbacks."""
+   """Example of using multi_callback."""
 
    import click
 
-   from click_compose import compose_callbacks
+   from click_compose import multi_callback
 
 
-   def validator1(
-       _ctx: click.Context | None,
-       _param: click.Parameter | None,
-       value: int,
+   def double(
+       _ctx: click.Context | None, _param: click.Parameter | None, value: int
    ) -> int:
-       """First validator."""
-       return value
+       """Double the value."""
+       return value * 2
 
 
-   def validator2(
-       _ctx: click.Context | None,
-       _param: click.Parameter | None,
-       value: int,
+   def add_ten(
+       _ctx: click.Context | None, _param: click.Parameter | None, value: int
    ) -> int:
-       """Second validator."""
-       return value
+       """Add ten to the value."""
+       return value + 10
 
 
-   def transformer(
-       _ctx: click.Context | None,
-       _param: click.Parameter | None,
-       value: int,
-   ) -> int:
-       """Transform the value."""
-       return value
+   def to_string(
+       _ctx: click.Context | None, _param: click.Parameter | None, value: int
+   ) -> str:
+       """Convert the value to a string."""
+       return str(object=value)
 
 
    @click.command()
    @click.option(
        "--value",
        type=int,
-       callback=compose_callbacks(
-           first=compose_callbacks(first=validator1, second=validator2),
-           second=transformer,
-       ),
+       callback=multi_callback(callbacks=(double, add_ten, to_string)),
    )
-   def cmd(value: int) -> None:
-       """Example command using compose_callbacks."""
+   def cmd(value: str) -> None:
+       """Print the transformed value."""
        click.echo(message=value)
-
-
-   if __name__ == "__main__":
-       cmd([])
-
-The value is passed through each callback in order, with the output of one callback becoming the input to the next.
 
 ``sequence_validator``
 ----------------------

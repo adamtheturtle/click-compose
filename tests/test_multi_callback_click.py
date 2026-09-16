@@ -1,4 +1,4 @@
-"""Tests for compose_callbacks functionality."""
+"""Tests for Click and Cloup integration of multi_callback."""
 
 from collections.abc import Callable, Sequence
 from typing import assert_type
@@ -7,10 +7,10 @@ import click
 import cloup
 from click.testing import CliRunner
 
-from click_compose import compose_callbacks, deduplicate, sequence_validator
+from click_compose import deduplicate, multi_callback, sequence_validator
 
 
-def test_compose_callbacks() -> None:
+def test_multi_callback_click_option() -> None:
     """Both callbacks are applied in sequence."""
 
     def double(
@@ -35,7 +35,7 @@ def test_compose_callbacks() -> None:
     @click.option(
         "--num",
         type=int,
-        callback=compose_callbacks(first=double, second=add_ten),
+        callback=multi_callback(callbacks=(double, add_ten)),
     )
     def cmd(num: int) -> None:
         """Test command."""
@@ -48,7 +48,7 @@ def test_compose_callbacks() -> None:
     assert result.output.strip() == "20"
 
 
-def test_compose_callbacks_with_validation() -> None:
+def test_multi_callback_with_validation() -> None:
     """Validation callbacks can raise exceptions."""
     max_value = 100
 
@@ -80,9 +80,8 @@ def test_compose_callbacks_with_validation() -> None:
     @click.option(
         "--num",
         type=int,
-        callback=compose_callbacks(
-            first=validate_positive,
-            second=validate_max_100,
+        callback=multi_callback(
+            callbacks=(validate_positive, validate_max_100),
         ),
     )
     def cmd(num: int) -> None:
@@ -107,7 +106,7 @@ def test_compose_callbacks_with_validation() -> None:
     assert "Must be <= 100" in result.output
 
 
-def test_compose_callbacks_with_type_conversion() -> None:
+def test_multi_callback_with_type_conversion() -> None:
     """Callbacks can change the type of the value."""
 
     def to_string(
@@ -128,7 +127,7 @@ def test_compose_callbacks_with_type_conversion() -> None:
         del ctx, param
         return f"{value} items"
 
-    callback = compose_callbacks(first=to_string, second=add_suffix)
+    callback = multi_callback(callbacks=(to_string, add_suffix))
     assert_type(
         callback,
         Callable[
@@ -153,7 +152,7 @@ def test_compose_callbacks_with_type_conversion() -> None:
     assert result.output.strip() == "42 items"
 
 
-def test_compose_callbacks_with_cloup_option() -> None:
+def test_multi_callback_with_cloup_option() -> None:
     """A generic callback pipeline is inferred within a Cloup option."""
 
     def validate_nonempty(
@@ -172,9 +171,11 @@ def test_compose_callbacks_with_cloup_option() -> None:
         "values",
         "--value",
         multiple=True,
-        callback=compose_callbacks(
-            first=deduplicate,
-            second=sequence_validator(validator=validate_nonempty),
+        callback=multi_callback(
+            callbacks=(
+                deduplicate,
+                sequence_validator(validator=validate_nonempty),
+            ),
         ),
     )
     def command(values: Sequence[str]) -> None:

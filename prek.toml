@@ -209,7 +209,7 @@ hooks = [
   {
     id = "interrogate-docs",
     name = "interrogate docs",
-    entry = 'uvx --from=doccmd==2026.9.1 doccmd --no-write-to-file --example-workers 0 --language=python --command="uv run --group=dev interrogate"',
+    entry = 'uvx --from=doccmd==2026.9.16 doccmd --no-write-to-file --example-workers 0 --language=python --command="uv run --group=dev interrogate"',
     language = "python",
     types_or = [
       "markdown",
@@ -240,7 +240,7 @@ hooks = [
   {
     id = "mypy-docs",
     name = "mypy-docs",
-    entry = 'uvx --from=doccmd==2026.9.1 doccmd --no-write-to-file --language=python --command="uv run --group=dev mypy --num-workers=4"',
+    entry = 'uvx --from=doccmd==2026.9.16 doccmd --no-write-to-file --language=python --command="uv run --group=dev mypy --num-workers=4"',
     language = "python",
     types_or = [
       "markdown",
@@ -262,7 +262,7 @@ hooks = [
   {
     id = "pylint-docs",
     name = "pylint-docs",
-    entry = 'uvx --from=doccmd==2026.9.1 doccmd --no-write-to-file --example-workers 0 --language=python --command="uv run --group=dev pylint"',
+    entry = 'uvx --from=doccmd==2026.9.16 doccmd --no-write-to-file --example-workers 0 --language=python --command="uv run --group=dev pylint"',
     language = "python",
     types_or = [
       "markdown",
@@ -294,7 +294,7 @@ hooks = [
   {
     id = "pyright-docs",
     name = "pyright-docs",
-    entry = 'uvx --from=doccmd==2026.9.1 doccmd --no-write-to-file --example-workers 0 --language=python --command="uv run --group=dev pyright"',
+    entry = 'uvx --from=doccmd==2026.9.16 doccmd --no-write-to-file --example-workers 0 --language=python --command="uv run --group=dev pyright"',
     language = "python",
     types_or = [
       "markdown",
@@ -328,7 +328,7 @@ hooks = [
   {
     id = "ty-docs",
     name = "ty-docs",
-    entry = 'uvx --from=doccmd==2026.9.1 doccmd --no-write-to-file --example-workers 0 --language=python --command="uv run --group=dev ty check"',
+    entry = 'uvx --from=doccmd==2026.9.16 doccmd --no-write-to-file --example-workers 0 --language=python --command="uv run --group=dev ty check"',
     language = "python",
     types_or = [
       "markdown",
@@ -353,7 +353,7 @@ hooks = [
   {
     id = "pyrefly-docs",
     name = "pyrefly-docs",
-    entry = 'uvx --from=doccmd==2026.9.1 doccmd --no-write-to-file --example-workers 0 --language=python --command="uv run --group=dev pyrefly check"',
+    entry = 'uvx --from=doccmd==2026.9.16 doccmd --no-write-to-file --example-workers 0 --language=python --command="uv run --group=dev pyrefly check"',
     language = "python",
     types_or = [
       "markdown",
@@ -387,7 +387,7 @@ hooks = [
   {
     id = "ruff-check-fix-docs",
     name = "ruff check fix docs",
-    entry = 'uvx --from=doccmd==2026.9.1 doccmd --language=python --command="uv run --group=dev ruff check --fix"',
+    entry = 'uvx --from=doccmd==2026.9.16 doccmd --language=python --command="uv run --group=dev ruff check --fix"',
     language = "python",
     types_or = [
       "markdown",
@@ -412,7 +412,7 @@ hooks = [
   {
     id = "ruff-format-fix-docs",
     name = "ruff format docs",
-    entry = 'uvx --from=doccmd==2026.9.1 doccmd --language=python --no-pad-file --command="uv run --group=dev ruff format"',
+    entry = 'uvx --from=doccmd==2026.9.16 doccmd --language=python --no-pad-file --command="uv run --group=dev ruff format"',
     language = "python",
     types_or = [
       "markdown",
@@ -456,7 +456,7 @@ hooks = [
   {
     id = "shellcheck-docs",
     name = "shellcheck-docs",
-    entry = 'uvx --from=doccmd==2026.9.1 doccmd --no-write-to-file --example-workers 0 --language=shell --language=console --command="uv run --group=dev shellcheck --shell=bash"',
+    entry = 'uvx --from=doccmd==2026.9.16 doccmd --no-write-to-file --example-workers 0 --language=shell --language=console --command="uv run --group=dev shellcheck --shell=bash"',
     language = "python",
     types_or = [
       "markdown",
@@ -477,7 +477,7 @@ hooks = [
   {
     id = "shfmt-docs",
     name = "shfmt-docs",
-    entry = 'uvx --from=doccmd==2026.9.1 doccmd --language=shell --language=console --skip-marker=shfmt --no-pad-file --command="uv run --group=dev shfmt --write --space-redirects --indent=4"',
+    entry = 'uvx --from=doccmd==2026.9.16 doccmd --language=shell --language=console --skip-marker=shfmt --no-pad-file --command="uv run --group=dev shfmt --write --space-redirects --indent=4"',
     language = "python",
     types_or = [
       "markdown",
@@ -516,7 +516,7 @@ hooks = [
   {
     id = "vulture-docs",
     name = "vulture docs",
-    entry = 'uvx --from=doccmd==2026.9.1 doccmd --no-write-to-file --example-workers 0 --language=python --command="uv run --group=dev vulture"',
+    entry = 'uvx --from=doccmd==2026.9.16 doccmd --no-write-to-file --example-workers 0 --language=python --command="uv run --group=dev vulture"',
     language = "python",
     types_or = [
       "markdown",
