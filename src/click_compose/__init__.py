@@ -114,6 +114,9 @@ def compose_callbacks(
     return callback
 
 
+# Finite overloads check each type transition in a callback chain.
+# https://github.com/python/mypy/issues/8449
+# https://discuss.python.org/t/proposal-feedback-wanted-typing-relatedtypes-typing-relation-enables-type-hinting-variadic-compose-etc/56698
 @overload
 def multi_callback(
     *,
