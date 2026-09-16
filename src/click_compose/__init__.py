@@ -11,6 +11,7 @@ from beartype import beartype
 
 T = TypeVar("T")
 U = TypeVar("U")
+V = TypeVar("V")
 
 
 @beartype
@@ -18,8 +19,8 @@ def sequence_validator(
     *,
     validator: Callable[[click.Context | None, click.Parameter | None, T], U],
 ) -> Callable[
-    [click.Context | None, click.Parameter | None, Sequence[T] | None],
-    Sequence[U] | None,
+    [click.Context | None, click.Parameter | None, Sequence[T]],
+    Sequence[U],
 ]:
     """Wrap a single-value validator to apply it to a sequence of values.
 
@@ -37,11 +38,9 @@ def sequence_validator(
     def callback(
         ctx: click.Context | None,
         param: click.Parameter | None,
-        value: Sequence[T] | None,
-    ) -> Sequence[U] | None:
+        value: Sequence[T],
+    ) -> Sequence[U]:
         """Apply the validator to each element in the sequence."""
-        if value is None:
-            return None
         return_values: list[U] = []
         for item in value:
             returned_value = validator(ctx, param, item)
@@ -55,8 +54,8 @@ def sequence_validator(
 def deduplicate(
     ctx: click.Context | None,
     param: click.Parameter | None,
-    sequence: Sequence[T] | None,
-) -> Sequence[T] | None:
+    sequence: Sequence[T],
+) -> Sequence[T]:
     """
     Return the sequence with duplicates removed while preserving
     order.
@@ -65,42 +64,36 @@ def deduplicate(
     del ctx
     del param
 
-    if sequence is None:
-        return None
-
     return tuple(dict.fromkeys(sequence).keys())
 
 
 @beartype
-def multi_callback(
+def compose_callbacks(
     *,
-    callbacks: Sequence[Callable[..., T]],
-) -> Callable[[click.Context | None, click.Parameter | None, T], T]:
-    """Create a Click-compatible callback that applies multiple callbacks
-    in
-    sequence.
+    first: Callable[[click.Context | None, click.Parameter | None, T], U],
+    second: Callable[[click.Context | None, click.Parameter | None, U], V],
+) -> Callable[[click.Context | None, click.Parameter | None, T], V]:
+    """Compose two Click callbacks into one callback.
 
-    This function takes a sequence of Click callbacks and returns a new
-    callback that applies each callback in order, threading the value through
-    each one. Each callback can transform the type, allowing for flexible
-    pipelines of transformations and validations.
+    The first callback's output is passed to the second callback. Compose the
+    result again to build a longer pipeline while preserving every
+    intermediate type.
 
     Args:
-        callbacks: A sequence of Click callbacks to apply in order.
+        first: The callback to apply first.
+        second: The callback to apply to the first callback's result.
 
     Returns:
-        A Click callback that applies all the given callbacks in sequence.
+        A Click callback that applies both callbacks in sequence.
     """
 
     def callback(
         ctx: click.Context | None,
         param: click.Parameter | None,
         value: T,
-    ) -> T:
-        """Apply each callback in sequence to the value."""
-        result = value
-        for cb in callbacks:
-            result = cb(ctx, param, result)
-        return result
+    ) -> V:
+        """Apply both callbacks in sequence to the value."""
+        intermediate = first(ctx, param, value)
+        return second(ctx, param, intermediate)
 
     return callback

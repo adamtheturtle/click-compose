@@ -1,39 +1,17 @@
-"""Tests for multi_callback functionality."""
+"""Tests for compose_callbacks functionality."""
+
+from collections.abc import Callable, Sequence
+from typing import assert_type
 
 import click
+import cloup
 from click.testing import CliRunner
 
-from click_compose import multi_callback
+from click_compose import compose_callbacks, deduplicate, sequence_validator
 
 
-def test_multi_callback_single_callback() -> None:
-    """A single callback works correctly."""
-
-    def double(
-        ctx: click.Context | None,
-        param: click.Parameter | None,
-        value: int,
-    ) -> int:
-        """Double the value."""
-        del ctx, param
-        return value * 2
-
-    @click.command()
-    @click.option(
-        "--num", type=int, callback=multi_callback(callbacks=[double])
-    )
-    def cmd(num: int) -> None:
-        """Test command."""
-        click.echo(message=num)
-
-    runner = CliRunner()
-    result = runner.invoke(cli=cmd, args=["--num", "5"])
-    assert result.exit_code == 0
-    assert result.output.strip() == "10"
-
-
-def test_multi_callback_multiple_callbacks() -> None:
-    """Multiple callbacks are applied in sequence."""
+def test_compose_callbacks() -> None:
+    """Both callbacks are applied in sequence."""
 
     def double(
         ctx: click.Context | None,
@@ -57,7 +35,7 @@ def test_multi_callback_multiple_callbacks() -> None:
     @click.option(
         "--num",
         type=int,
-        callback=multi_callback(callbacks=[double, add_ten]),
+        callback=compose_callbacks(first=double, second=add_ten),
     )
     def cmd(num: int) -> None:
         """Test command."""
@@ -70,7 +48,7 @@ def test_multi_callback_multiple_callbacks() -> None:
     assert result.output.strip() == "20"
 
 
-def test_multi_callback_with_validation() -> None:
+def test_compose_callbacks_with_validation() -> None:
     """Validation callbacks can raise exceptions."""
     max_value = 100
 
@@ -102,8 +80,9 @@ def test_multi_callback_with_validation() -> None:
     @click.option(
         "--num",
         type=int,
-        callback=multi_callback(
-            callbacks=[validate_positive, validate_max_100]
+        callback=compose_callbacks(
+            first=validate_positive,
+            second=validate_max_100,
         ),
     )
     def cmd(num: int) -> None:
@@ -128,22 +107,7 @@ def test_multi_callback_with_validation() -> None:
     assert "Must be <= 100" in result.output
 
 
-def test_multi_callback_empty_list() -> None:
-    """An empty list of callbacks returns the value unchanged."""
-
-    @click.command()
-    @click.option("--num", type=int, callback=multi_callback(callbacks=[]))
-    def cmd(num: int) -> None:
-        """Test command."""
-        click.echo(message=num)
-
-    runner = CliRunner()
-    result = runner.invoke(cli=cmd, args=["--num", "42"])
-    assert result.exit_code == 0
-    assert result.output.strip() == "42"
-
-
-def test_multi_callback_with_type_conversion() -> None:
+def test_compose_callbacks_with_type_conversion() -> None:
     """Callbacks can change the type of the value."""
 
     def to_string(
@@ -164,11 +128,20 @@ def test_multi_callback_with_type_conversion() -> None:
         del ctx, param
         return f"{value} items"
 
+    callback = compose_callbacks(first=to_string, second=add_suffix)
+    assert_type(
+        callback,
+        Callable[
+            [click.Context | None, click.Parameter | None, int],
+            str,
+        ],
+    )
+
     @click.command()
     @click.option(
         "--num",
         type=int,
-        callback=multi_callback(callbacks=[to_string, add_suffix]),
+        callback=callback,
     )
     def cmd(num: str) -> None:
         """Test command."""
@@ -178,3 +151,41 @@ def test_multi_callback_with_type_conversion() -> None:
     result = runner.invoke(cli=cmd, args=["--num", "42"])
     assert result.exit_code == 0
     assert result.output.strip() == "42 items"
+
+
+def test_compose_callbacks_with_cloup_option() -> None:
+    """A generic callback pipeline is inferred within a Cloup option."""
+
+    def validate_nonempty(
+        ctx: click.Context | None,
+        param: click.Parameter | None,
+        value: str,
+    ) -> str:
+        """Reject an empty value."""
+        if value == "":
+            message = "Value cannot be empty"
+            raise click.BadParameter(message=message, ctx=ctx, param=param)
+        return value
+
+    @cloup.command()
+    @cloup.option(
+        "values",
+        "--value",
+        multiple=True,
+        callback=compose_callbacks(
+            first=deduplicate,
+            second=sequence_validator(validator=validate_nonempty),
+        ),
+    )
+    def command(values: Sequence[str]) -> None:
+        """Print the validated values."""
+        click.echo(message=",".join(values))
+
+    runner = CliRunner()
+    result = runner.invoke(cli=command, args=["--value", "a", "--value", "a"])
+    assert result.exit_code == 0
+    assert result.output.strip() == "a"
+
+    invalid_result = runner.invoke(cli=command, args=["--value", ""])
+    assert invalid_result.exit_code != 0
+    assert "Value cannot be empty" in invalid_result.output

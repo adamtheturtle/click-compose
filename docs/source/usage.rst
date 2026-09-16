@@ -3,37 +3,43 @@ Usage
 
 |project| provides utilities for composing Click callbacks.
 
-``multi_callback``
-------------------
+``compose_callbacks``
+---------------------
 
-``multi_callback`` creates a Click-compatible callback that applies multiple callbacks in sequence.
-This is useful when you want to apply multiple transformations or validators to a single value.
+``compose_callbacks`` creates a Click-compatible callback that applies two callbacks in sequence.
+Compose its result again to build a longer type-safe pipeline.
 
 .. code-block:: python
 
-   """Example of using multi_callback."""
+   """Example of using compose_callbacks."""
 
    import click
 
-   from click_compose import multi_callback
+   from click_compose import compose_callbacks
 
 
    def validator1(
-       _ctx: click.Context, _param: click.Parameter, value: int
+       _ctx: click.Context | None,
+       _param: click.Parameter | None,
+       value: int,
    ) -> int:
        """First validator."""
        return value
 
 
    def validator2(
-       _ctx: click.Context, _param: click.Parameter, value: int
+       _ctx: click.Context | None,
+       _param: click.Parameter | None,
+       value: int,
    ) -> int:
        """Second validator."""
        return value
 
 
    def transformer(
-       _ctx: click.Context, _param: click.Parameter, value: int
+       _ctx: click.Context | None,
+       _param: click.Parameter | None,
+       value: int,
    ) -> int:
        """Transform the value."""
        return value
@@ -43,10 +49,13 @@ This is useful when you want to apply multiple transformations or validators to 
    @click.option(
        "--value",
        type=int,
-       callback=multi_callback(callbacks=[validator1, validator2, transformer]),
+       callback=compose_callbacks(
+           first=compose_callbacks(first=validator1, second=validator2),
+           second=transformer,
+       ),
    )
    def cmd(value: int) -> None:
-       """Example command using multi_callback."""
+       """Example command using compose_callbacks."""
        click.echo(message=value)
 
 

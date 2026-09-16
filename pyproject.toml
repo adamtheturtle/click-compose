@@ -44,6 +44,7 @@ urls.Source = "https://github.com/adamtheturtle/click-compose"
 dev = [
     "actionlint-py==1.7.12.24",
     "check-manifest==0.51",
+    "cloup==4.0.0",
     "deptry==0.25.1",
     "doc8==2.0.0",
     "furo==2025.12.19",
@@ -236,6 +237,8 @@ SPELLING.spelling-store-unknown-words = "no"
 
 [tool.interrogate]
 fail-under = 100
+# Overload stubs cannot have docstrings; the implementation is documented.
+ignore-overloaded-functions = true
 verbose = 2
 omit-covered-files = true
 
