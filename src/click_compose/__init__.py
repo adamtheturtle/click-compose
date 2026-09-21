@@ -66,7 +66,15 @@ def sequence_validator(
 
 @beartype
 def _deduplicate_sequence(sequence: Sequence[T]) -> tuple[T, ...]:
-    """Return unique sequence items in their original order."""
+    """Return unique sequence items in their original order.
+
+    raises: TypeError
+    post[]:
+        len(_) <= len(sequence)
+        all(item in sequence for item in _)
+        all(_.count(item) == 1 for item in _)
+        tuple(map(sequence.index, _)) == tuple(sorted(map(sequence.index, _)))
+    """
     return tuple(dict.fromkeys(sequence).keys())
 
 
