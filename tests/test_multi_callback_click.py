@@ -1,6 +1,7 @@
 """Tests for Click and Cloup integration of multi_callback."""
 
 from collections.abc import Callable, Sequence
+from textwrap import dedent
 from typing import assert_type
 
 import click
@@ -98,12 +99,26 @@ def test_multi_callback_with_validation() -> None:
     # Fails first validator
     result = runner.invoke(cli=cmd, args=["--num", "-5"])
     assert result.exit_code != 0
-    assert "Must be positive" in result.output
+    assert result.output == dedent(
+        text="""\
+        Usage: cmd [OPTIONS]
+        Try 'cmd --help' for help.
+
+        Error: Invalid value for '--num': Must be positive
+        """
+    )
 
     # Fails second validator
     result = runner.invoke(cli=cmd, args=["--num", "150"])
     assert result.exit_code != 0
-    assert "Must be <= 100" in result.output
+    assert result.output == dedent(
+        text="""\
+        Usage: cmd [OPTIONS]
+        Try 'cmd --help' for help.
+
+        Error: Invalid value for '--num': Must be <= 100
+        """
+    )
 
 
 def test_multi_callback_with_type_conversion() -> None:
@@ -189,4 +204,11 @@ def test_multi_callback_with_cloup_option() -> None:
 
     invalid_result = runner.invoke(cli=command, args=["--value", ""])
     assert invalid_result.exit_code != 0
-    assert "Value cannot be empty" in invalid_result.output
+    assert invalid_result.output == dedent(
+        text="""\
+        Usage: command [OPTIONS]
+        Try 'command --help' for help.
+
+        Error: Invalid value for '--value': Value cannot be empty
+        """
+    )

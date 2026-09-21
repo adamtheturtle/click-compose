@@ -1,5 +1,7 @@
 """Tests for sequence_validator functionality."""
 
+from textwrap import dedent
+
 import click
 from click.testing import CliRunner
 from hypothesis import given
@@ -150,7 +152,7 @@ def test_empty_sequence() -> None:
     runner = CliRunner()
     result = runner.invoke(cli=cmd, args=[])
     assert result.exit_code == 0
-    assert "Count: 0" in result.output
+    assert result.output == "Count: 0\n"
 
 
 def test_sequence_validator_with_validation() -> None:
@@ -194,7 +196,14 @@ def test_sequence_validator_with_validation() -> None:
         cli=cmd, args=["--nums", "1", "--nums", "-5", "--nums", "3"]
     )
     assert result.exit_code != 0
-    assert "Must be positive" in result.output
+    assert result.output == dedent(
+        text="""\
+        Usage: cmd [OPTIONS]
+        Try 'cmd --help' for help.
+
+        Error: Invalid value for '--nums': Must be positive
+        """
+    )
 
 
 def test_sequence_validator_with_type_conversion() -> None:
