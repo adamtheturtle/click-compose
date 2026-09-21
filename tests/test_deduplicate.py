@@ -18,7 +18,7 @@ _HYPOTHESIS_BACKEND = os.environ.get(
 @settings(backend=_HYPOTHESIS_BACKEND)
 @given(values=st.lists(elements=st.text()))
 def test_deduplicate_matches_first_occurrences(values: list[str]) -> None:
-    """Deduplication preserves the first occurrence of each value."""
+    """Removing duplicates preserves each value's first occurrence."""
     expected: list[str] = []
     for value in values:
         if value not in expected:
