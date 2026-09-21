@@ -9,7 +9,10 @@ from hypothesis import strategies as st
 
 from click_compose import sequence_validator
 
-_HYPOTHESIS_BACKEND = os.environ.get("HYPOTHESIS_BACKEND", "hypothesis")
+_HYPOTHESIS_BACKEND = os.environ.get(
+    key="HYPOTHESIS_BACKEND",
+    default="hypothesis",
+)
 
 
 def _identity(

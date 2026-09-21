@@ -9,7 +9,10 @@ from hypothesis import strategies as st
 
 from click_compose import deduplicate
 
-_HYPOTHESIS_BACKEND = os.environ.get("HYPOTHESIS_BACKEND", "hypothesis")
+_HYPOTHESIS_BACKEND = os.environ.get(
+    key="HYPOTHESIS_BACKEND",
+    default="hypothesis",
+)
 
 
 @settings(backend=_HYPOTHESIS_BACKEND)
