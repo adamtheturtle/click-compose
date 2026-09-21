@@ -49,7 +49,7 @@ def test_deduplicate_empty_sequence() -> None:
     runner = CliRunner()
     result = runner.invoke(cli=cmd, args=[])
     assert result.exit_code == 0
-    assert "Count: 0" in result.output
+    assert result.output == "Count: 0\n"
 
 
 def test_deduplicate_returns_tuple() -> None:
