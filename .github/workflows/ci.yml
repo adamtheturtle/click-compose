@@ -39,14 +39,38 @@ jobs:
         run: |
           uv run --group=dev --python=${{ matrix.python-version }} pytest -s -vvv --cov-fail-under 100 --cov=src/ --cov=tests/ tests/
 
+  crosshair:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+          fetch-tags: true
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v10.1.0
+        with:
+          enable-cache: true
+          cache-dependency-glob: '**/pyproject.toml'
+
+      - name: Run property tests with CrossHair
+        run: |
+          uv run --group=dev --group=crosshair pytest -vvv tests/test_deduplicate.py tests/test_sequence_validator.py
+        env:
+          HYPOTHESIS_BACKEND: crosshair
+          UV_PYTHON: '3.14'
+
   completion-ci:
-    needs: build
+    needs: [build, crosshair]
     runs-on: ubuntu-latest
     if: always()  # Run even if one matrix job fails
     steps:
       - name: Check matrix job status
         run: |-
-          if ! ${{ needs.build.result == 'success' }}; then
+          if ! ${{ needs.build.result == 'success' && needs.crosshair.result == 'success' }}; then
             echo "One or more matrix jobs failed"
             exit 1
           fi

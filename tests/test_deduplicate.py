@@ -1,9 +1,30 @@
 """Tests for ``deduplicate`` helper."""
 
+import os
+
 import click
 from click.testing import CliRunner
+from hypothesis import given, settings
+from hypothesis import strategies as st
 
 from click_compose import deduplicate
+
+_HYPOTHESIS_BACKEND = os.environ.get("HYPOTHESIS_BACKEND", "hypothesis")
+
+
+@settings(backend=_HYPOTHESIS_BACKEND)
+@given(values=st.lists(elements=st.text()))
+def test_deduplicate_matches_first_occurrences(values: list[str]) -> None:
+    """Deduplication preserves the first occurrence of each value."""
+    expected: list[str] = []
+    for value in values:
+        if value not in expected:
+            expected.append(value)
+
+    result = deduplicate(ctx=None, param=None, sequence=values)
+
+    assert result == tuple(expected)
+    assert deduplicate(ctx=None, param=None, sequence=result) == result
 
 
 def test_deduplicate_removes_duplicates() -> None:

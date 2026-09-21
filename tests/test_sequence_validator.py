@@ -1,11 +1,15 @@
 """Tests for sequence_validator functionality."""
 
+import os
+
 import click
 from click.testing import CliRunner
-from hypothesis import given
+from hypothesis import given, settings
 from hypothesis import strategies as st
 
 from click_compose import sequence_validator
+
+_HYPOTHESIS_BACKEND = os.environ.get("HYPOTHESIS_BACKEND", "hypothesis")
 
 
 def _identity(
@@ -28,6 +32,7 @@ def _double(
     return value * 2
 
 
+@settings(backend=_HYPOTHESIS_BACKEND)
 @given(items=st.lists(elements=st.integers()))
 def test_identity_preserves_values(items: list[int]) -> None:
     """Sequence_validator with identity returns the same values."""
@@ -55,6 +60,7 @@ def test_identity_preserves_values(items: list[int]) -> None:
     assert result.output.strip() == expected
 
 
+@settings(backend=_HYPOTHESIS_BACKEND)
 @given(items=st.lists(elements=st.integers()))
 def test_maps_function_over_elements(items: list[int]) -> None:
     """Sequence_validator(f)(items) == [f(item) for item in items]."""
@@ -82,6 +88,7 @@ def test_maps_function_over_elements(items: list[int]) -> None:
     assert result.output.strip() == expected
 
 
+@settings(backend=_HYPOTHESIS_BACKEND)
 @given(items=st.lists(elements=st.integers()))
 def test_preserves_length(items: list[int]) -> None:
     """Output length matches input length."""
@@ -107,6 +114,7 @@ def test_preserves_length(items: list[int]) -> None:
     assert result.output.strip() == str(object=len(items))
 
 
+@settings(backend=_HYPOTHESIS_BACKEND)
 @given(items=st.lists(elements=st.integers()))
 def test_preserves_order(items: list[int]) -> None:
     """Element order is preserved."""
