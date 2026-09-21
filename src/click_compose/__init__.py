@@ -65,6 +65,12 @@ def sequence_validator(
 
 
 @beartype
+def _deduplicate_sequence(sequence: Sequence[T]) -> tuple[T, ...]:
+    """Return unique sequence items in their original order."""
+    return tuple(dict.fromkeys(sequence).keys())
+
+
+@beartype
 def deduplicate(
     ctx: click.Context | None,
     param: click.Parameter | None,
@@ -78,7 +84,7 @@ def deduplicate(
     del ctx
     del param
 
-    return tuple(dict.fromkeys(sequence).keys())
+    return _deduplicate_sequence(sequence=sequence)
 
 
 # Finite overloads check each type transition in a callback chain.
