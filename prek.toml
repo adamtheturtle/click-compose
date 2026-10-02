@@ -230,7 +230,7 @@ hooks = [
   {
     id = "mypy",
     name = "mypy",
-    entry = "uv run --group=dev mypy --num-workers=4",
+    entry = "uv run --group=dev mypy",
     language = "python",
     types_or = ["python"],
     additional_dependencies = ["uv==0.11.7"],
@@ -240,7 +240,7 @@ hooks = [
   {
     id = "mypy-docs",
     name = "mypy-docs",
-    entry = 'uvx --from=doccmd==2026.9.16.1 doccmd --no-write-to-file --language=python --command="uv run --group=dev mypy --num-workers=4"',
+    entry = 'uvx --from=doccmd==2026.9.16.1 doccmd --no-write-to-file --language=python --command="uv run --group=dev mypy"',
     language = "python",
     types_or = [
       "markdown",
