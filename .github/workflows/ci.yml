@@ -52,7 +52,7 @@ jobs:
 
       - name: Run tests
         run: |
-          uv run --group=dev --python=${{ matrix.python-version }} pytest -s -vvv --cov-fail-under 100 --cov=src/ --cov=tests/ tests/
+          uv run --group=dev --python=${{ matrix.python-version }} pytest -s -vvv tests/ --cov --cov-config=pyproject.toml
 
   completion-ci:
     needs: [build, crosshair]
