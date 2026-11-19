@@ -59,7 +59,7 @@ dev = [
     "myst-parser==5.2.0",
     "no-defaults==2026.9.1",
     "packaging>=24.0",
-    "prek==0.5.10",
+    "prek==0.5.11",
     "pydocstringformatter==1.0.0",
     "pydocstyle==6.3",
     "pygments==2.21.0",
