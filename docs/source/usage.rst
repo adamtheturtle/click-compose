@@ -8,7 +8,7 @@ Usage
 
 ``multi_callback`` applies callbacks in order.
 Pass a tuple of up to ten callbacks for statically checked type-changing stages.
-Each callback must accept the preceding callback's result.
+Pass the result of each callback to the next callback.
 For same-type callbacks, a typed list of any length is supported.
 An empty list returns the input unchanged.
 
