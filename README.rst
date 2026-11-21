@@ -34,7 +34,7 @@ Quick Start
 multi_callback
 ~~~~~~~~~~~~~~
 
-Combine multiple callbacks into a single callback that applies them in sequence.
+Compose callbacks into one callback that applies them in sequence.
 Use a tuple for type-checked, type-changing chains of up to ten callbacks:
 
 .. code-block:: python
