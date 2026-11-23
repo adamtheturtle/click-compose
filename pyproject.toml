@@ -51,7 +51,7 @@ dev = [
     "doc8==2.0.0",
     "doc8-inline-markup==2026.11.18.3; python_version>='3.12'",
     "furo==2025.12.19",
-    "hypothesis==6.170.15",
+    "hypothesis==6.170.17",
     "interrogate==1.7.0",
     "mypy==2.4.1",
     "mypy-pytest-parametrize==2026.10.5.1",
